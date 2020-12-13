@@ -1,0 +1,2 @@
+Startup messge should be device gpio and not device uart
+Remove the executable from the repository
