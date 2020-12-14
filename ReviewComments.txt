@@ -1,2 +1,3 @@
 Startup messge should be device gpio and not device uart
 Remove the executable from the repository
+Need a little more documentation on how to get this to work.  I was able to build and run this service.   If I have a device (moisture sensor) where I need to get values for pin #21, what do I need to do?  What would my profile look like?  What would the configuration look like?
