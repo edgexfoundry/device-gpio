@@ -1,4 +1,4 @@
-The following open source projects are referenced by Device Service Random Go:
+The following open source projects are referenced by Device Service GPIO Go:
 
 BurntSushi/toml (MIT) https://github.com/BurntSushi/toml
 https://github.com/BurntSushi/toml/blob/master/COPYING

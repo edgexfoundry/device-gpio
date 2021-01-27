@@ -4,19 +4,19 @@ LogLevel = 'INFO'
 [Service]
 BootTimeout = 30000
 CheckInterval = '10s'
-Host = '172.17.0.1'
+Host = 'localhost'
 ServerBindAddr = ''  # blank value defaults to Service.Host value
-Port = 49960
+Port = 49950
 Protocol = 'http'
-StartupMsg = 'device uart started'
+StartupMsg = 'device gpio started'
 Timeout = 5000
 ConnectRetries = 10
 Labels = []
-EnableAsyncReadings = true
+EnableAsyncReadings = false
 AsyncBufferSize = 16
 
 [Registry]
-Host = '172.17.0.1'
+Host = 'localhost'
 Port = 8500
 Type = 'consul'
 
@@ -27,17 +27,17 @@ File = ''
 [Clients]
   [Clients.Data]
   Protocol = 'http'
-  Host = '172.17.0.1'
+  Host = 'localhost'
   Port = 48080
 
   [Clients.Metadata]
   Protocol = 'http'
-  Host = '172.17.0.1'
+  Host = 'localhost'
   Port = 48081
 
   [Clients.Logging]
   Protocol = 'http'
-  Host = '172.17.0.1'
+  Host = 'localhost'
   Port = 48061
 
 [Device]
@@ -53,10 +53,19 @@ File = ''
 
 # Pre-define Devices
 [[DeviceList]]
-  Name = "gpio"
-  Profile = "GPIO-Device"
-  Description = "example of gpio device"
-  Labels = []
+  Name = "gpio65"
+  Profile = "device-gpio65"
+  Description = "use gpio65"
+  Labels = ['gpio65']
   [DeviceList.Protocols]
     [DeviceList.Protocols.other]
-      Address = "/api/v1/device/gpio"
+      Address = "device-gpio65"
+[[DeviceList]]
+  Name = "gpio66"
+  Profile = "device-gpio65"
+  Description = "use gpio66"
+  Labels = ['gpio66']
+  [DeviceList.Protocols]
+    [DeviceList.Protocols.other]
+      Address = "device-gpio66"
+

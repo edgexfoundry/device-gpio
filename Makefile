@@ -36,6 +36,8 @@ docker: $(DOCKERS)
 docker_device_gpio_go:
 	docker build \
 		--label "git_sha=$(GIT_SHA)" \
+		--build-arg http_proxy \
+        --build-arg https_proxy \
 		-t edgexfoundry/docker-device-gpio-go:$(GIT_SHA) \
 		-t edgexfoundry/docker-device-gpio-go:$(VERSION)-dev \
 		.

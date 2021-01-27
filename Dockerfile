@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Intel
+# Copyright (c) 2020 Jiangxing Intelligence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-ARG BASE=golang:1.15-alpine
+ARG BASE=golang:1.15-alpine3.12
 FROM ${BASE} AS builder
 
 ARG MAKE='make build'
@@ -22,7 +22,7 @@ ARG MAKE='make build'
 WORKDIR $GOPATH/src/github.com/edgexfoundry/device-gpio-go
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2020: Intel'
+  copyright='Copyright (c) 2020: Jiangxing Intelligence'
 
 RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
 
@@ -37,16 +37,16 @@ RUN ${MAKE}
 FROM scratch
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2020: Intel'
+  copyright='Copyright (c) 2020: Jiangxing Intelligence'
 
-ENV APP_PORT=49960
+ENV APP_PORT=49950
 #expose command data port
 EXPOSE $APP_PORT
 
 WORKDIR /
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/cmd/device-gpio-go /usr/local/bin/
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/cmd/res/configuration.toml /res/
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/cmd/res/device-gpio-profile.yaml /res/
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/LICENSE /
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/Attribution.txt /
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/cmd/ /
 
-ENTRYPOINT ["/usr/local/bin/device-gpio-go"]
-CMD ["-cp=consul.http://172.17.0.1:8500", "--registry", "--confdir=/res"]
+ENTRYPOINT ["/device-gpio-go"]
+CMD ["-cp=consul://edgex-core-consul:8500", "--registry", "--confdir=/res"]
