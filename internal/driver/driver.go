@@ -13,8 +13,6 @@ package driver
 import (
 	"fmt"
 	"time"
-	"regexp"
-	"strconv"
 
 	dsModels "github.com/edgexfoundry/device-sdk-go/pkg/models"
 	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
@@ -41,21 +39,28 @@ func (s *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsModels.As
 func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]contract.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
 
 	s.lc.Info(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
-	re := regexp.MustCompile("[0-9]+")
-	gpionumlist := re.FindAllString(protocols["other"]["Address"], -1)
-	gpionum, _ := strconv.Atoi(gpionumlist[0])
+	gpioNumStr := reqs[0].Attributes["number"]
 
 	now := time.Now().UnixNano()
 
 	for _, req := range reqs {
 		switch req.DeviceResourceName {
-		case "value":
+		case "Power":
 			{
-				rxbuf, err := s.gpiodevice.GetGPIO(gpionum)
+				value, err := s.gpiodevice.GetGPIO(gpioNumStr)
 				if err != nil {
 					return nil, err
 				}
-				cv := dsModels.NewStringValue(reqs[0].DeviceResourceName, now, rxbuf)
+				cv, _ := dsModels.NewBoolValue(req.DeviceResourceName, now, value)
+				res = append(res, cv)
+			}
+		case "Switch":
+			{
+				value, err := s.gpiodevice.GetGPIO(gpioNumStr)
+				if err != nil {
+					return nil, err
+				}
+				cv, _ := dsModels.NewBoolValue(req.DeviceResourceName, now, value)
 				res = append(res, cv)
 			}
 		}
@@ -70,22 +75,32 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]cont
 // command.
 func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]contract.ProtocolProperties, reqs []dsModels.CommandRequest,
 	params []*dsModels.CommandValue) error {
-	s.lc.Info(fmt.Sprintf("Driver.HandleWriteCommands: protocols: %v, resource: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, params))
-	re := regexp.MustCompile("[0-9]+")
-	gpionumlist := re.FindAllString(protocols["other"]["Address"], -1)
-	gpionum, _ := strconv.Atoi(gpionumlist[0])
+	s.lc.Info(fmt.Sprintf("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params))
+	gpioNumStr := reqs[0].Attributes["number"]
 
 	for _, param := range params {
 		var err error
 		switch param.DeviceResourceName {
-		case "value":
+		case "Power":
 			{
-				var value int8
-				value, err = param.Int8Value()
+				var value bool
+				value, err = param.BoolValue()
 				if err != nil {
 					return err
 				}
-				err = s.gpiodevice.SetGPIO(gpionum, int(value))
+				err = s.gpiodevice.SetGPIO(gpioNumStr, value)
+				if err != nil {
+					return err
+				}
+			}
+		case "Led":
+			{
+				var value bool
+				value, err = param.BoolValue()
+				if err != nil {
+					return err
+				}
+				err = s.gpiodevice.SetGPIO(gpioNumStr, value)
 				if err != nil {
 					return err
 				}

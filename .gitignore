@@ -28,3 +28,5 @@ parts/
 squashfs-root/
 coverage.out
 VERSION
+
+.DS_Store

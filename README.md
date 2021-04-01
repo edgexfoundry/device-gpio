@@ -11,23 +11,38 @@ GPIO Micro Service - device service for connecting GPIO devices to EdgeX.
 
 ## Usage
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command.
-- The gpio device service can contains many pre-defined devices which were defined by `configuration.toml`, such as `gpio65`, `gpio66`. These devices are created by the gpio device service in core metadata when the service first initializes. 
-- Each device causes the generation of one value of the same type.  For example,  `gpio65` value: `value` .
-- After the  gpio device service has started,  we can read or write the system gpio corresponding to pre-defined device by `GET` or ` PUT` the `value` command.
+- The gpio device service can contains many pre-defined devices which were defined by `configuration.toml`, such as `Custom-GPIO-Device`. These devices are created by the gpio device service in core metadata when the service first initializes. 
+- Each pre-defined device has its own profile, such as `device-custom-gpio-profile.yaml`, which choose the sysfs gpios to export by `deviceResources`. Then it add `coreCommands`  and `coreCommands` with the  name same to `deviceResources`.
+- After the  gpio device service has started,  we can read or write the system gpio corresponding to pre-defined device by specific command.
 
 ```yaml
 deviceResources:
   -
-    name: "value"
-    description: "set or get system gpio value"
+    name: "Power"
+    description: "system power gpio export"
+    attributes: { number: "/134" }
     properties:
       value:
-        { type: "Int8", readWrite: "RW", minimum: "0", maximum: "1", defaultValue: "0" }
-      units:
-        { type: "String", readWrite: "R", defaultValue: "high:1; low:0" }
+        { type: "Bool", readWrite: "RW" }
+
+  -
+    name: "Led"
+    description: "system led gpio export"
+    attributes: { number: "/65" }
+    properties:
+      value:
+        { type: "Bool", readWrite: "W" }
+
+  -
+    name: "Button"
+    description: "system button gpio export"
+    attributes: { number: "/66" }
+    properties:
+      value:
+        { type: "Bool", readWrite: "R" }
 ```
 
-
+- Since GPIO sysfs interface is deprecated after Linux version 4.8, we provide two ABI interfaces: the sysfs version and the new chardev version. Please change GOTAG in Makefile, and select the interface you like. For the sysfs version, in device resource, you need to provide attribute number like  "/123", which 123 is the pin number you selected. As for chardev version, the number should be like "0/17", which the first number is for gpiochip, and the second number is for selected line number. 
 
 
 ## Guidance
@@ -35,32 +50,33 @@ Here we give two step by step guidance examples of using this device service. In
 
 Before we actually operate GPIO devices, we need to find out RESTful urls of this pre-defined device. By using
 
-`curl http://localhost:48082/api/v1/device/name/gpio65`
+`curl http://localhost:48082/api/v1/device/name/Custom-GPIO-Device`
 
 Use the `curl` response to get the command URLs (with device and command ids) to issue commands to the GPIO device via the command service as shown below. You can use a tool like `Postman` instead of `curl` to issue the same commands.
 
 ```json
 {
-    "id": "08c22497-4493-4422-bc46-06f3ba7eb804",
-    "name": "gpio65",
+    "id": "d734883a-0c66-4213-9bfb-864e0ce076cc",
+    "name": "Custom-GPIO-Device",
     "adminState": "UNLOCKED",
     "operatingState": "ENABLED",
     "labels": [
-        "gpio65"
+        "device-custom-gpio"
     ],
     "commands": [
+        ......
         {
-            "created": 1614825879590,
-            "modified": 1614825879590,
-            "id": "ead832aa-43b2-4140-b3f2-78b627855997",
-            "name": "value",
+            "created": 1615972980751,
+            "modified": 1615972980751,
+            "id": "cd5a77a5-8d3e-4657-8752-a8d6ccae73b7",
+            "name": "Power",
             "get": {
-                "path": "/api/v1/device/{deviceId}/value",
+                "path": "/api/v1/device/{deviceId}/Power",
                 "responses": [
                     {
                         "code": "200",
                         "expectedValues": [
-                            "value"
+                            "Power"
                         ]
                     },
                     {
@@ -68,10 +84,10 @@ Use the `curl` response to get the command URLs (with device and command ids) to
                         "description": "service unavailable"
                     }
                 ],
-                "url": "http://edgex-core-command:48082/api/v1/device/08c22497-4493-4422-bc46-06f3ba7eb804/command/ead832aa-43b2-4140-b3f2-78b627855997"
+                "url": "http://edgex-core-command:48082/api/v1/device/d734883a-0c66-4213-9bfb-864e0ce076cc/command/cd5a77a5-8d3e-4657-8752-a8d6ccae73b7"
             },
             "put": {
-                "path": "/api/v1/device/{deviceId}/value",
+                "path": "/api/v1/device/{deviceId}/Power",
                 "responses": [
                     {
                         "code": "200"
@@ -81,12 +97,13 @@ Use the `curl` response to get the command URLs (with device and command ids) to
                         "description": "service unavailable"
                     }
                 ],
-                "url": "http://edgex-core-command:48082/api/v1/device/08c22497-4493-4422-bc46-06f3ba7eb804/command/ead832aa-43b2-4140-b3f2-78b627855997",
+                "url": "http://edgex-core-command:48082/api/v1/device/d734883a-0c66-4213-9bfb-864e0ce076cc/command/cd5a77a5-8d3e-4657-8752-a8d6ccae73b7",
                 "parameterNames": [
-                    "value"
+                    "Power"
                 ]
             }
-        }
+        },
+		......
     ]
 }
 ```
@@ -94,41 +111,44 @@ Use the `curl` response to get the command URLs (with device and command ids) to
 
 
 ### Write value to GPIO
-Assume we have a GPIO device connected to pin 65 on current system. When we write a value to GPIO, this gpio will be exported and set direction to output.
+Assume we have a GPIO device ( used for power enable ) connected to pin 134 on current system. When we write a value to GPIO, this gpio will be exported and set direction to output.
 
 ```shell
-curl -H "Content-Type: application/json" -X PUT -d '{"value":"1"}' http://localhost:48082/api/v1/device/08c22497-4493-4422-bc46-06f3ba7eb804/command/ead832aa-43b2-4140-b3f2-78b627855997
+curl -H "Content-Type: application/json" -X PUT -d '{"Power":"true"}' http://localhost:48082/api/v1/device/d734883a-0c66-4213-9bfb-864e0ce076cc/command/cd5a77a5-8d3e-4657-8752-a8d6ccae73b7
 ```
 
-Now if you test pin 65, it is outputing high voltage.
+Now if you test pin 134, it is outputting high voltage.
 
 
 ### Read value from GPIO
-Assume we have another GPIO device connected to pin 134 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
+Assume we have another GPIO device ( used for button detection ) connected to pin 66 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
 
 ```shell
-curl http://localhost:48082/api/v1/device/08c22497-4493-4422-bc46-06f3ba7eb804/command/ead832aa-43b2-4140-b3f2-78b627855997
+curl http://localhost:48082/api/v1/device/d734883a-0c66-4213-9bfb-864e0ce076cc/command/852161f4-5ddf-418d-9202-39682cfb1dca
 ```
 
-The command id `ead832aa-43b2-4140-b3f2-78b627855997` here is for the value command.
+The command id `852161f4-5ddf-418d-9202-39682cfb1dca` here is for the `Button` command.
 
 Here, we post some results:
 
 ```bash
-$ curl http://localhost...78b627855997`
-{"device":"gpio","origin":1611752289806843150,"readings":[{"origin":1611752289806307945,"device":"gpio","name":"value","value":"{\"gpio\":65,\"value\":0}","valueType":"String"}],"EncodedEvent":null}
+$ curl http://localhost:48082......852161f4-5ddf-418d-9202-39682cfb1dca
+{"device":"Custom-GPIO-Device","origin":1615974593898774961,"readings":[{"origin":1615974593893644001,"device":"Custom-GPIO-Device","name":"Button","value":"false","valueType":"Bool"}],"EncodedEvent":null}
 
-$ curl http://localhost...78b627855997`
-{"device":"gpio","origin":1611752309686651113,"readings":[{"origin":1611752309686212741,"device":"gpio","name":"value","value":"{\"gpio\":65,\"value\":1}","valueType":"String"}],"EncodedEvent":null}
+$ curl http://localhost:48082......852161f4-5ddf-418d-9202-39682cfb1dca
+{"device":"Custom-GPIO-Device","origin":1615974593898774961,"readings":[{"origin":1615974593893644001,"device":"Custom-GPIO-Device","name":"Button","value":"true","valueType":"Bool"}],"EncodedEvent":null}
 ```
+
 
 
 ## API Reference
 
-| Method | Core Command | parameters        | Description                                                  | Response                    |
-| ------ | ------------ | ----------------- | ------------------------------------------------------------ | --------------------------- |
-| put    | value        | {"value":<value>} | Set value for the exported gpio<br/><value>: string, "1" or "0" | 200 ok                      |
-| get    | value        |                   | Get value of the specified gpio                              | "{\"gpio\":65,\"value\":1}" |
+- `device-custom-gpio-profile.yaml`
+
+  | Core Command | Method | parameters        | Description                                                  | Response |
+  | ------------ | ------ | ----------------- | ------------------------------------------------------------ | -------- |
+  | Power        | put    | {"Power":<value>} | Set value for the exported gpio<br/><value>: bool, "true" or "false" | 200 ok   |
+  |              | get    |                   | Get value of the specified gpio<br/>valueType: Bool          | "true"   |
 
 
 

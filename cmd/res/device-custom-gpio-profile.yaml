@@ -1,0 +1,103 @@
+name: "Custom-GPIO-Device"
+manufacturer: "Jiangxing Intelligence"
+model: "SP-01"
+labels:
+  - "device-custom-gpio"
+description: "Example of custom gpio device"
+
+deviceResources:
+  -
+    name: "Power"
+    description: "system power gpio export"
+    attributes: { number: "0/17" }
+    properties:
+      value:
+        { type: "Bool", readWrite: "RW" }
+
+  -
+    name: "Led"
+    description: "system led gpio export"
+    attributes: { number: "0/27" }
+    properties:
+      value:
+        { type: "Bool", readWrite: "W" }
+
+  -
+    name: "Switch"
+    description: "system switch gpio export"
+    attributes: { number: "0/22" }
+    properties:
+      value:
+        { type: "Bool", readWrite: "R" }
+
+deviceCommands:
+  -
+    name: "Power"
+    get:
+      - { operation: "get", deviceResource: "Power" }
+    set:
+      - { operation: "set", deviceResource: "Power" }
+
+  -
+    name: "Led"
+    set:
+      - { operation: "set", deviceResource: "Led" }
+
+  -
+    name: "Switch"
+    get:
+      - { operation: "get", deviceResource: "Switch" }
+
+coreCommands:
+  -
+    name: "Power"
+    put:
+      path: "/api/v1/device/{deviceId}/Power"
+      parameterNames: ["Power"]
+      responses:
+        -
+          code: "200"
+          description: ""
+        -
+          code: "500"
+          description: "service unavailable"
+          expectedValues: []
+    get:
+      path: "/api/v1/device/{deviceId}/Power"
+      responses:
+        -
+          code: "200"
+          description: ""
+          expectedValues: ["Power"]
+        -
+          code: "500"
+          description: "service unavailable"
+          expectedValues: []
+
+  -
+    name: "Led"
+    put:
+      path: "/api/v1/device/{deviceId}/Led"
+      parameterNames: ["Led"]
+      responses:
+        -
+          code: "200"
+          description: ""
+        -
+          code: "500"
+          description: "service unavailable"
+          expectedValues: []
+
+  -
+    name: "Switch"
+    get:
+      path: "/api/v1/device/{deviceId}/Switch"
+      responses:
+        -
+          code: "200"
+          description: ""
+          expectedValues: ["Switch"]
+        -
+          code: "500"
+          description: "service unavailable"
+          expectedValues: []
