@@ -58,6 +58,7 @@ File = ''
   Description = "Example of custom gpio device"
   Labels = ['device-custom-gpio']
   [DeviceList.Protocols]
-    [DeviceList.Protocols.other]
-      Address = "device-custom-gpio"
-
+    [DeviceList.Protocols.interface]
+      Interface = "sysfs"
+      # Interface = "chardev" is experimental
+      ChipSelected = "0"

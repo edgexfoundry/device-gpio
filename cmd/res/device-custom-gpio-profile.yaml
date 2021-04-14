@@ -8,24 +8,24 @@ description: "Example of custom gpio device"
 deviceResources:
   -
     name: "Power"
-    description: "system power gpio export"
-    attributes: { number: "0/17" }
+    description: "mocking power button"
+    attributes: { line: 17 }
     properties:
       value:
         { type: "Bool", readWrite: "RW" }
 
   -
     name: "Led"
-    description: "system led gpio export"
-    attributes: { number: "0/27" }
+    description: "mocking LED"
+    attributes: { line: 27 }
     properties:
       value:
         { type: "Bool", readWrite: "W" }
 
   -
     name: "Switch"
-    description: "system switch gpio export"
-    attributes: { number: "0/22" }
+    description: "mocking switch"
+    attributes: { line: 22 }
     properties:
       value:
         { type: "Bool", readWrite: "R" }
@@ -75,10 +75,10 @@ coreCommands:
           expectedValues: []
 
   -
-    name: "Led"
+    name: "LED"
     put:
-      path: "/api/v1/device/{deviceId}/Led"
-      parameterNames: ["Led"]
+      path: "/api/v1/device/{deviceId}/LED"
+      parameterNames: ["LED"]
       responses:
         -
           code: "200"

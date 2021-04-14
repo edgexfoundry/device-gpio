@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	serviceName string = "device-gpio-go"
+	serviceName string = "device-gpio"
 )
 
 func main() {

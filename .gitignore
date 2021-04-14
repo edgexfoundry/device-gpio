@@ -16,7 +16,6 @@
 .idea/
 vendor/
 cmd/device-gpio-go
-glide.lock
 go.sum
 
 # snap files

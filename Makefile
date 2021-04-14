@@ -13,14 +13,11 @@ VERSION=$(shell cat ./VERSION 2>/dev/null || echo 1.0.0)
 GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio-go.Version=$(VERSION)"
 
-# GOTAGS=sysfs
-GOTAGS=chardev
-
 build: $(MICROSERVICES)
 	$(GO) build ./...
 
 cmd/device-gpio-go:
-	$(GO) build -tags $(GOTAGS) $(GOFLAGS) -o $@ ./cmd
+	$(GO) build $(GOFLAGS) -o $@ ./cmd
 
 test:
 	$(GO) test ./... -coverprofile=coverage.out
