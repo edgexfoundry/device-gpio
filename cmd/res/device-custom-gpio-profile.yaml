@@ -15,7 +15,7 @@ deviceResources:
         { type: "Bool", readWrite: "RW" }
 
   -
-    name: "Led"
+    name: "LED"
     description: "mocking LED"
     attributes: { line: 27 }
     properties:
@@ -39,9 +39,9 @@ deviceCommands:
       - { operation: "set", deviceResource: "Power" }
 
   -
-    name: "Led"
+    name: "LED"
     set:
-      - { operation: "set", deviceResource: "Led" }
+      - { operation: "set", deviceResource: "LED" }
 
   -
     name: "Switch"

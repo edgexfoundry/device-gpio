@@ -39,7 +39,7 @@ FROM scratch
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2020: Jiangxing Intelligence'
 
-ENV APP_PORT=49950
+ENV APP_PORT=49994
 #expose command data port
 EXPOSE $APP_PORT
 

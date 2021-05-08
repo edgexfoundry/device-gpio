@@ -194,6 +194,8 @@ func (s *Driver) getGPIO(line string) (bool, error) {
 				}
 				// for sysfs interface, leave nil object
 				s.openedLine[line] = &gpiod.Line{}
+				// waiting for gpio device fd
+				time.Sleep(1 * time.Second)
 			}
 			if err = s.setDirectionBySysfs(valid_line, "in"); err != nil {
 				return false, err

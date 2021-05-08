@@ -28,4 +28,5 @@ squashfs-root/
 coverage.out
 VERSION
 
+# mac preview
 .DS_Store

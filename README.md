@@ -13,7 +13,7 @@ GPIO Micro Service - device service for connecting GPIO devices to EdgeX
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command
 - The gpio device service can contains many pre-defined devices which were defined by `configuration.toml` such as `Custom-GPIO-Device`. These devices are created by the GPIO device service in core metadata when the service first initializes
 - Device profiles are used to describe the actual GPIO hardware of a device and allow individual gpios to be given human-readable names/aliases
-- After the  gpio device service has started,  we can read or write these  corresponding pre-defined devices
+- After the gpio device service has started, we can read or write these corresponding pre-defined devices
 
 ```yaml
 deviceResources:
@@ -42,10 +42,10 @@ deviceResources:
         { type: "Bool", readWrite: "R" }
 ```
 
-- Since GPIO sysfs interface is deprecated after Linux version 4.8, we provide two ABI interfaces: the sysfs version and the new chardev version. By default we set interface to sysfs, and you can change it inside `[DeviceList.Protocols.interface]` section of `configuration.toml`. For the chardev interface, you still need to specify a selected chip, this is also under `[DeviceList.Protocols.interface]` section.
+- Since GPIO sysfs interface is **deprecated after Linux version 4.8**, we provide two ABI interfaces: the sysfs version and the new chardev version. By default we set interface to sysfs, and you can change it inside `[DeviceList.Protocols.interface]` section of `configuration.toml`. For the chardev interface, you still need to specify a selected chip, this is also under `[DeviceList.Protocols.interface]` section.
 
 ## Guidance
-Here we give two step by step guidance examples of using this device service. In these examples, we use RESTful API to interact with EdgeX.
+Here we give two step by step guidance examples of using this device service. In these examples, we use RESTful API to interact with EdgeX (please notice that, you still need to use Core Command service rather than directly interact with GPIO device service).
 
 Since the `edgex-cli` has released, we can use this new approach to operate devices:
 
@@ -124,7 +124,7 @@ Now if you test pin 134, it is outputting high voltage.
 
 
 ### Read value from GPIO
-Assume we have another GPIO device ( used for button detection ) connected to pin 66 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
+Assume we have another GPIO device (used for button detection) connected to pin 66 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
 
 ```shell
 curl http://localhost:48082/api/v1/device/d734883a-0c66-4213-9bfb-864e0ce076cc/command/852161f4-5ddf-418d-9202-39682cfb1dca

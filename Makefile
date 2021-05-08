@@ -14,7 +14,6 @@ GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio-go.Version=$(VERSION)"
 
 build: $(MICROSERVICES)
-	$(GO) build ./...
 
 cmd/device-gpio-go:
 	$(GO) build $(GOFLAGS) -o $@ ./cmd
