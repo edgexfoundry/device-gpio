@@ -19,7 +19,7 @@ FROM ${BASE} AS builder
 
 ARG MAKE='make build'
 
-WORKDIR $GOPATH/src/github.com/edgexfoundry/device-gpio-go
+WORKDIR $GOPATH/src/github.com/edgexfoundry/device-gpio
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2020: Jiangxing Intelligence'
@@ -44,9 +44,9 @@ ENV APP_PORT=49994
 EXPOSE $APP_PORT
 
 WORKDIR /
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/LICENSE /
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/Attribution.txt /
-COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio-go/cmd/ /
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio/LICENSE /
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio/Attribution.txt /
+COPY --from=builder /go/src/github.com/edgexfoundry/device-gpio/cmd/ /
 
-ENTRYPOINT ["/device-gpio-go"]
+ENTRYPOINT ["/device-gpio"]
 CMD ["-cp=consul://edgex-core-consul:8500", "--registry", "--confdir=/res"]

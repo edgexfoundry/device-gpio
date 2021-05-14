@@ -1,6 +1,6 @@
 // -*- Mode: Go; indent-tabs-mode: t -*-
 //
-// Copyright (C) 2019-2020 Jiangxing Intelligence Ltd
+// Copyright (C) 2021 Jiangxing Intelligence Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -8,8 +8,8 @@
 package main
 
 import (
-	"github.com/edgexfoundry/device-gpio-go"
-	"github.com/edgexfoundry/device-gpio-go/internal/driver"
+	"github.com/edgexfoundry/device-gpio"
+	"github.com/edgexfoundry/device-gpio/internal/driver"
 	"github.com/edgexfoundry/device-sdk-go/pkg/startup"
 )
 
