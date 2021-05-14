@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020 Jiangxing Intelligence
+# Copyright (c) 2021 Jiangxing Intelligence
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ ARG MAKE='make build'
 WORKDIR $GOPATH/src/github.com/edgexfoundry/device-gpio
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2020: Jiangxing Intelligence'
+  copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
 RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
 
@@ -37,7 +37,7 @@ RUN ${MAKE}
 FROM scratch
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2020: Jiangxing Intelligence'
+  copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
 ENV APP_PORT=49994
 #expose command data port
