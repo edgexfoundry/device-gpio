@@ -26,7 +26,7 @@ import (
 type Driver struct {
 	lc         logger.LoggingClient
 	asyncCh    chan<- *dsModels.AsyncValues
-	driver     string
+	config     *configuration
 	openedChip *gpiod.Chip
 	openedLine map[string](*gpiod.Line)
 }
@@ -36,9 +36,20 @@ type Driver struct {
 func (s *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsModels.AsyncValues, deviceCh chan<- []dsModels.DiscoveredDevice) error {
 	s.lc = lc
 	s.asyncCh = asyncCh
-	s.driver = ""
+
 	s.openedChip = nil
 	s.openedLine = make(map[string](*gpiod.Line))
+
+	config, err := loadInterfaceConfig()
+	if err != nil {
+		panic(fmt.Errorf("load GPIO configuration failed: %v", err))
+	}
+	if config.Abi_driver != "sysfs" && config.Abi_driver != "chardev" {
+		panic(fmt.Errorf("unsupport GPIO ABI interface: %v", config.Abi_driver))
+	}
+	s.config = config
+	s.lc.Info(fmt.Sprintf("Interface: %v", config.Abi_driver))
+	s.lc.Info(fmt.Sprintf("ChipSelected: %v", config.Chip_selected))
 	return nil
 }
 
@@ -47,15 +58,8 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]cont
 
 	s.lc.Info(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
 	// fmt.Println(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
-	abi_driver := protocols["interface"]["Interface"]
-	if s.driver == "" {
-		s.driver = abi_driver
-	}
-	s.lc.Info(fmt.Sprintf("Interface: %v", abi_driver))
-	chip_selected := protocols["interface"]["ChipSelected"]
-	s.lc.Info(fmt.Sprintf("ChipSelected: %v", chip_selected))
-	if s.openedChip == nil && s.driver == "chardev" {
-		valid_chip, err := cast.ToUint8E(chip_selected)
+	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
+		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
 		if err != nil {
 			s.lc.Error("invalid chip number, override with gpiochip0, %v", err)
 			valid_chip = 0
@@ -88,12 +92,8 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]cont
 func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]contract.ProtocolProperties, reqs []dsModels.CommandRequest,
 	params []*dsModels.CommandValue) error {
 	s.lc.Info(fmt.Sprintf("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params))
-	abi_driver := protocols["interface"]["Interface"]
-	s.lc.Info(fmt.Sprintf("Interface: %v", abi_driver))
-	chip_selected := protocols["interface"]["ChipSelected"]
-	s.lc.Info(fmt.Sprintf("ChipSelected: %v", chip_selected))
-	if s.openedChip == nil && s.driver == "chardev" {
-		valid_chip, err := cast.ToUint8E(chip_selected)
+	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
+		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
 		if err != nil {
 			s.lc.Error("invalid chip number, override with gpiochip0, %v", err)
 			valid_chip = 0
@@ -127,7 +127,7 @@ func (s *Driver) Stop(force bool) error {
 	if s.lc != nil {
 		s.lc.Debug(fmt.Sprintf("Driver.Stop called: force=%v", force))
 	}
-	switch s.driver {
+	switch s.config.Abi_driver {
 	case "sysfs":
 		{
 			for line := range s.openedLine {
@@ -181,7 +181,7 @@ func (s *Driver) RemoveDevice(deviceName string, protocols map[string]contract.P
 
 //
 func (s *Driver) getGPIO(line string) (bool, error) {
-	switch s.driver {
+	switch s.config.Abi_driver {
 	case "sysfs":
 		{
 			valid_line, err := cast.ToUint8E(line)
@@ -225,7 +225,7 @@ func (s *Driver) getGPIO(line string) (bool, error) {
 }
 
 func (s *Driver) setGPIO(line string, value bool) error {
-	switch s.driver {
+	switch s.config.Abi_driver {
 	case "sysfs":
 		{
 			valid_line, err := cast.ToUint8E(line)

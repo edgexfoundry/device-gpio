@@ -32,6 +32,10 @@ Type = 'consul'
   Host = 'localhost'
   Port = 48081
 
+[Driver]
+  Interface = 'sysfs'
+  # Interface = 'chardev'  # this interface is experimental
+  ChipSelected = '0'
 
 [Device]
   DataTransform = true
@@ -51,7 +55,3 @@ Type = 'consul'
   Description = "Example of custom gpio device"
   Labels = ['device-custom-gpio']
   [DeviceList.Protocols]
-    [DeviceList.Protocols.interface]
-      Interface = "sysfs"
-      # Interface = "chardev" is experimental
-      ChipSelected = "0"
