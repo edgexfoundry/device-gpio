@@ -10,4 +10,4 @@ require (
 	github.com/warthog618/gpiod v0.6.0
 )
 
-go 1.15
+go 1.16
