@@ -17,8 +17,6 @@
 ARG BASE=golang:1.16-alpine3.12
 FROM ${BASE} AS builder
 
-ARG MAKE='make build'
-
 WORKDIR /device-gpio
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
@@ -31,23 +29,4 @@ RUN apk add --update --no-cache make git
 
 COPY . .
 
-RUN go mod tidy
-RUN ${MAKE}
-
-# Next image - Copy built Go binary into new workspace
-FROM scratch
-
-LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2021: Jiangxing Intelligence'
-
-ENV APP_PORT=49994
-#expose command data port
-EXPOSE $APP_PORT
-
-WORKDIR /
-COPY --from=builder /device-gpio/LICENSE /
-COPY --from=builder /device-gpio/Attribution.txt /
-COPY --from=builder /device-gpio/cmd/ /
-
-ENTRYPOINT ["/device-gpio"]
-CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]
+RUN go mod download

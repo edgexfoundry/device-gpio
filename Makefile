@@ -9,11 +9,14 @@ MICROSERVICES=cmd/device-gpio
 DOCKERS=docker_device_gpio_go
 .PHONY: $(DOCKERS)
 
-VERSION=$(shell cat ./VERSION 2>/dev/null || echo 1.0.0)
+VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
 GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio.Version=$(VERSION)"
 
-build: $(MICROSERVICES)
+build: tidy $(MICROSERVICES)
+
+tidy:
+	go mod tidy
 
 cmd/device-gpio:
 	$(GO) build $(GOFLAGS) -o $@ ./cmd
@@ -36,7 +39,7 @@ docker_device_gpio_go:
 	docker build \
 		--label "git_sha=$(GIT_SHA)" \
 		--build-arg http_proxy \
-        --build-arg https_proxy \
+		--build-arg https_proxy \
 		-t edgexfoundry/docker-device-gpio:$(GIT_SHA) \
 		-t edgexfoundry/docker-device-gpio:$(VERSION)-dev \
 		.
