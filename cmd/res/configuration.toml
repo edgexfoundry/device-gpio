@@ -1,14 +1,14 @@
 [Writable]
-LogLevel = 'INFO'
+LogLevel = "INFO"
 
 [Service]
 BootTimeout = 30000
-CheckInterval = '10s'
-Host = 'localhost'
-ServerBindAddr = ''  # blank value defaults to Service.Host value
+CheckInterval = "10s"
+Host = "localhost"
+ServerBindAddr = ""  # blank value defaults to Service.Host value
 Port = 49994
-Protocol = 'http'
-StartupMsg = 'device gpio started'
+Protocol = "http"
+StartupMsg = "device gpio started"
 Timeout = 5000
 ConnectRetries = 10
 Labels = []
@@ -16,36 +16,36 @@ EnableAsyncReadings = false
 AsyncBufferSize = 16
 
 [Registry]
-Host = 'localhost'
+Host = "localhost"
 Port = 8500
-Type = 'consul'
+Type = "consul"
 
 
 [Clients]
   [Clients.Data]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 48080
 
   [Clients.Metadata]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 48081
 
 [Driver]
-  Interface = 'sysfs'
-  # Interface = 'chardev'  # this interface is experimental
-  ChipSelected = '0'
+  Interface = "sysfs"
+  # Interface = "chardev"  # this interface is experimental
+  ChipSelected = "0"
 
 [Device]
   DataTransform = true
-  InitCmd = ''
-  InitCmdArgs = ''
+  InitCmd = ""
+  InitCmdArgs = ""
   MaxCmdOps = 128
   MaxCmdValueLen = 256
-  RemoveCmd = ''
-  RemoveCmdArgs = ''
-  ProfilesDir = './res'
+  RemoveCmd = ""
+  RemoveCmdArgs = ""
+  ProfilesDir = "./res"
   UpdateLastConnected = false
 
 # Pre-define Devices
@@ -53,5 +53,5 @@ Type = 'consul'
   Name = "Custom-GPIO-Device"
   Profile = "Custom-GPIO-Device"
   Description = "Example of custom gpio device"
-  Labels = ['device-custom-gpio']
+  Labels = ["device-custom-gpio"]
   [DeviceList.Protocols]
