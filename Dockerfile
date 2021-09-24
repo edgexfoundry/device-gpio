@@ -14,40 +14,46 @@
 # limitations under the License.
 #
 
-ARG BASE=golang:1.16-alpine3.12
+ARG BASE=golang:1.16-alpine3.14
 FROM ${BASE} AS builder
 
-ARG MAKE='make build'
+ARG ALPINE_PKG_BASE="make git openssh-client gcc libc-dev zeromq-dev libsodium-dev"
+ARG ALPINE_PKG_EXTRA=""
 
+# set the working directory
 WORKDIR /device-gpio
+
+# Replicate the APK repository override.
+# If it is no longer necessary to avoid the CDN mirros we should consider dropping this as it is brittle.
+RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
+# Install our build time packages.
+RUN apk add --update --no-cache ${ALPINE_PKG_BASE} ${ALPINE_PKG_EXTRA}
+
+COPY . .
+
+RUN go mod tidy
+RUN go mod download
+
+# To run tests in the build container:
+#   docker build --build-arg 'MAKE=build test' .
+# This is handy of you do your Docker business on a Mac
+ARG MAKE='make build'
+RUN ${MAKE}
+
+FROM alpine:3.14
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
 RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
-
-# add git for go modules
-RUN apk add --update --no-cache make git
-
-COPY . .
-
-RUN go mod tidy
-RUN ${MAKE}
-
-# Next image - Copy built Go binary into new workspace
-FROM scratch
-
-LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2021: Jiangxing Intelligence'
-
-ENV APP_PORT=49994
-#expose command data port
-EXPOSE $APP_PORT
+RUN apk add --update --no-cache zeromq
 
 WORKDIR /
-COPY --from=builder /device-gpio/LICENSE /
 COPY --from=builder /device-gpio/Attribution.txt /
+COPY --from=builder /device-gpio/LICENSE /
 COPY --from=builder /device-gpio/cmd/ /
+
+EXPOSE 49994
 
 ENTRYPOINT ["/device-gpio"]
 CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]
