@@ -35,7 +35,7 @@ RUN go mod tidy
 RUN ${MAKE}
 
 # Next image - Copy built Go binary into new workspace
-FROM scratch
+FROM alpine:3.14
 
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2021: Jiangxing Intelligence'
