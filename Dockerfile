@@ -17,17 +17,17 @@
 ARG BASE=golang:1.17-alpine3.15
 FROM ${BASE} AS builder
 
-ARG MAKE='make build'
+ARG ALPINE_PKG_BASE="make git openssh-client gcc libc-dev zeromq-dev libsodium-dev"
+ARG ALPINE_PKG_EXTRA=""
 
+# set the working directory
 WORKDIR /device-gpio
 
-LABEL license='SPDX-License-Identifier: Apache-2.0' \
-  copyright='Copyright (c) 2021: Jiangxing Intelligence'
-
+# Replicate the APK repository override.
+# If it is no longer necessary to avoid the CDN mirros we should consider dropping this as it is brittle.
 RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
-
-# add git for go modules
-RUN apk add --update --no-cache make git
+# Install our build time packages.
+RUN apk add --update --no-cache ${ALPINE_PKG_BASE} ${ALPINE_PKG_EXTRA}
 
 COPY go.mod vendor* ./
 RUN [ ! -d "vendor" ] && go mod download all || echo "skipping..."
@@ -41,14 +41,15 @@ FROM alpine:3.14
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
-ENV APP_PORT=49994
-#expose command data port
-EXPOSE $APP_PORT
+RUN sed -e 's/dl-cdn[.]alpinelinux.org/nl.alpinelinux.org/g' -i~ /etc/apk/repositories
+RUN apk add --update --no-cache zeromq
 
 WORKDIR /
-COPY --from=builder /device-gpio/LICENSE /
 COPY --from=builder /device-gpio/Attribution.txt /
+COPY --from=builder /device-gpio/LICENSE /
 COPY --from=builder /device-gpio/cmd/ /
+
+EXPOSE 49994
 
 ENTRYPOINT ["/device-gpio"]
 CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]

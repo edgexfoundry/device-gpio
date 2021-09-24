@@ -8,9 +8,10 @@
 package main
 
 import (
+	"github.com/edgexfoundry/device-sdk-go/v2/pkg/startup"
+	
 	"github.com/edgexfoundry/device-gpio"
 	"github.com/edgexfoundry/device-gpio/internal/driver"
-	"github.com/edgexfoundry/device-sdk-go/pkg/startup"
 )
 
 const (

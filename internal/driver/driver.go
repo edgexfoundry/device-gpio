@@ -16,9 +16,11 @@ import (
 	"fmt"
 	"time"
 
-	dsModels "github.com/edgexfoundry/device-sdk-go/pkg/models"
-	"github.com/edgexfoundry/go-mod-core-contracts/clients/logger"
-	contract "github.com/edgexfoundry/go-mod-core-contracts/models"
+	dsModels "github.com/edgexfoundry/device-sdk-go/v2/pkg/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
+	"github.com/edgexfoundry/go-mod-core-contracts/v2/common"
+
 	"github.com/spf13/cast"
 	"github.com/warthog618/gpiod"
 )
@@ -54,7 +56,7 @@ func (s *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsModels.As
 }
 
 // HandleReadCommands triggers a protocol Read operation for the specified device.
-func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]contract.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
+func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
 
 	s.lc.Info(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
 	// fmt.Println(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
@@ -70,16 +72,16 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]cont
 			s.lc.Error("failed to open %v, %v", chipName, err)
 		}
 	}
-	lineNumStr := reqs[0].Attributes["line"]
+	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
 
-	now := time.Now().UnixNano()
+	// now := time.Now().UnixNano()
 
 	for _, req := range reqs {
 		value, err := s.getGPIO(lineNumStr)
 		if err != nil {
 			return nil, err
 		}
-		cv, _ := dsModels.NewBoolValue(req.DeviceResourceName, now, value)
+		cv, _ := dsModels.NewCommandValue(req.DeviceResourceName, common.ValueTypeBool, value)
 		res = append(res, cv)
 	}
 	return res, nil
@@ -89,7 +91,7 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]cont
 // a ResourceOperation for a specific device resource.
 // Since the commands are actuation commands, params provide parameters for the individual
 // command.
-func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]contract.ProtocolProperties, reqs []dsModels.CommandRequest,
+func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest,
 	params []*dsModels.CommandValue) error {
 	s.lc.Info(fmt.Sprintf("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params))
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
@@ -104,7 +106,7 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]con
 			s.lc.Error("failed to open %v, %v", chipName, err)
 		}
 	}
-	lineNumStr := reqs[0].Attributes["line"]
+	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
 
 	for _, param := range params {
 		value, err := param.BoolValue()
@@ -160,21 +162,21 @@ func (s *Driver) Stop(force bool) error {
 
 // AddDevice is a callback function that is invoked
 // when a new Device associated with this Device Service is added
-func (s *Driver) AddDevice(deviceName string, protocols map[string]contract.ProtocolProperties, adminState contract.AdminState) error {
+func (s *Driver) AddDevice(deviceName string, protocols map[string]models.ProtocolProperties, adminState models.AdminState) error {
 	s.lc.Debug(fmt.Sprintf("a new Device is added: %s", deviceName))
 	return nil
 }
 
 // UpdateDevice is a callback function that is invoked
 // when a Device associated with this Device Service is updated
-func (s *Driver) UpdateDevice(deviceName string, protocols map[string]contract.ProtocolProperties, adminState contract.AdminState) error {
+func (s *Driver) UpdateDevice(deviceName string, protocols map[string]models.ProtocolProperties, adminState models.AdminState) error {
 	s.lc.Debug(fmt.Sprintf("Device %s is updated", deviceName))
 	return nil
 }
 
 // RemoveDevice is a callback function that is invoked
 // when a Device associated with this Device Service is removed
-func (s *Driver) RemoveDevice(deviceName string, protocols map[string]contract.ProtocolProperties) error {
+func (s *Driver) RemoveDevice(deviceName string, protocols map[string]models.ProtocolProperties) error {
 	s.lc.Debug(fmt.Sprintf("Device %s is removed", deviceName))
 	return nil
 }

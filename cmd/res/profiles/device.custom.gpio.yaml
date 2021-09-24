@@ -1,0 +1,35 @@
+name: "Custom-GPIO-Device"
+manufacturer: "Jiangxing Intelligence"
+model: "SP-01"
+labels:
+  - "device-custom-gpio"
+description: "Example of custom gpio device"
+
+deviceResources:
+  -
+    name: "Power"
+    isHidden: false
+    description: "mocking power button"
+    attributes: { line: 17 }
+    properties:
+      valueType: "Bool"
+      readWrite: "RW"
+
+  -
+    name: "LED"
+    isHidden: false
+    description: "mocking LED"
+    attributes: { line: 27 }
+    properties:
+      valueType: "Bool"
+      readWrite: "W"
+
+  -
+    name: "Switch"
+    isHidden: false
+    description: "mocking switch"
+    attributes: { line: 22 }
+    properties:
+      valueType: "Bool"
+      readWrite: "R"
+
