@@ -13,7 +13,7 @@ VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
 GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio.Version=$(VERSION)"
 
-build: tidy $(MICROSERVICES)
+build: $(MICROSERVICES)
 
 tidy:
 	go mod tidy
@@ -24,10 +24,9 @@ cmd/device-gpio:
 test:
 	$(GO) test ./... -coverprofile=coverage.out
 	$(GO) vet ./...
-	gofmt -l .
-	[ "`gofmt -l .`" = "" ]
+	gofmt -l $$(find . -type f -name '*.go'| grep -v "/vendor/")
+	[ "`gofmt -l $$(find . -type f -name '*.go'| grep -v "/vendor/")`" = "" ]
 	./bin/test-attribution-txt.sh
-	./bin/test-go-mod-tidy.sh
 
 
 clean:
@@ -43,3 +42,6 @@ docker_device_gpio_go:
 		-t edgexfoundry/device-gpio:$(GIT_SHA) \
 		-t edgexfoundry/device-gpio:$(VERSION)-dev \
 		.
+
+vendor:
+	$(GO) mod vendor
