@@ -1,0 +1,93 @@
+name: edgex-device-gpio
+base: core20 
+license: Apache-2.0
+
+adopt-info: device-gpio
+
+summary: EdgeX Device GPIO
+description: |
+  TBA
+  
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+
+
+slots:
+  edgex-secretstore-token:
+    interface: content
+    content: edgex-secretstore-token
+    source:
+      write: [$SNAP_DATA/device-gpio]
+
+apps:
+  device-gpio:
+    command: bin/device-gpio $CONF_ARG
+    command-chain:
+      - bin/startup-env-var.sh
+    environment:
+      CONF_ARG: "--confdir=$SNAP_DATA/config/device-gpio/res"
+      # REGISTRY_ARG: "--registry" # Indicates service should use Registry.
+      # CONFPROVIDER_ARG: "--cp=consul.http://localhost:8500" # Indicates to use Configuration Provider service at specified URL.
+      DEVICE_PROFILESDIR: $SNAP_DATA/config/device-gpio/res/profiles
+      DEVICE_DEVICESDIR: $SNAP_DATA/config/device-gpio/res/devices
+      SECRETSTORE_TOKENFILE: $SNAP_DATA/config/secrets-token.json
+    daemon: simple
+    passthrough:
+      install-mode: disable
+    plugs: 
+      - network
+      - network-bind
+
+plugs:
+  device-config:
+    interface: content 
+    content: device-config
+    target: $SNAP_DATA/config
+
+parts:
+    
+  device-gpio:
+    source: .
+    plugin: make
+    build-packages: [git, libzmq3-dev, pkg-config]
+    stage-packages: [libzmq5]
+    build-snaps: [go/1.16/stable]
+    override-build: |
+      cd $SNAPCRAFT_PART_SRC
+
+      VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')
+      if [ -z "$VERSION" ]; then
+        VERSION="0.0.0"
+      fi
+      snapcraftctl set-version ${VERSION}
+      # this is needed for the make build
+      echo $VERSION > ./VERSION
+
+      make build
+
+      install -DT cmd/device-gpio $SNAPCRAFT_PART_INSTALL/bin/device-gpio
+
+      # copy all config files
+      mkdir -p $SNAPCRAFT_PART_INSTALL/config/device-gpio
+      cp -rv cmd/res $SNAPCRAFT_PART_INSTALL/config/device-gpio/res
+
+      install -DT Attribution.txt $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/Attribution.txt
+      install -DT LICENSE $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/LICENSE
+
+  hooks:
+    source: snap/local/hooks
+    plugin: make
+    build-snaps: [go/1.16/stable]
+    override-build: |
+      cd $SNAPCRAFT_PART_SRC
+      make build
+      install -DT ./cmd/configure/configure $SNAPCRAFT_PART_INSTALL/snap/hooks/configure
+      install -DT ./cmd/install/install $SNAPCRAFT_PART_INSTALL/snap/hooks/install
+      
+  config-common:
+    plugin: dump
+    source: snap/local/runtime-helpers
