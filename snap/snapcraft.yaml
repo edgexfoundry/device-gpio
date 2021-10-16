@@ -38,9 +38,11 @@ apps:
     daemon: simple
     passthrough:
       install-mode: disable
-    plugs: 
+    plugs:
       - network
       - network-bind
+      # Note: the gpio interface in not connected automatically. 
+      - gpio
 
 plugs:
   device-config:
