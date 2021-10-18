@@ -1,4 +1,4 @@
-# EdgeX Camera Device Service Snap
+# EdgeX GPIO Device Service Snap
 [![snap store badge](https://raw.githubusercontent.com/snapcore/snap-store-badges/master/EN/%5BEN%5D-snap-store-black-uneditable.png)](https://snapcraft.io/edgex-device-gpio)
 
 This folder contains snap packaging for the EdgeX GPIO Device Service Snap
@@ -74,6 +74,34 @@ ensures that as well as starting the service now, it will be automatically start
 $ sudo snap start --enable edgex-device-gpio.device-gpio
 ```
 
+### Allowing access to the GPIO
+The `gpio` interface provides slots for each GPIO channel. The slots can be listed using:
+```bash
+$ sudo snap interface gpio
+name:    gpio
+summary: allows access to specific GPIO pin
+plugs:
+  - edgex-device-gpio
+slots:
+  - pi:bcm-gpio-0
+  - pi:bcm-gpio-1
+  - pi:bcm-gpio-10
+  ...
+```
+
+The slots are not connected automatically. For example, to connect GPIO-17:
+```
+$ sudo snap connect edgex-device-gpio:gpio pi:bcm-gpio-17
+```
+
+Check the list of connections:
+```
+$ sudo snap connections
+Interface        Plug                            Slot              Notes
+gpio             edgex-device-gpio:gpio          pi:bcm-gpio-17    manual
+…
+```
+
 ### Using a content interface to set device configuration
 
 The `device-config` content interface allows another snap to seed this device
@@ -108,9 +136,9 @@ $ sudo snap start edgex-device-gpio.device-gpio
 **Note** - content interfaces from snaps installed from the Snap Store that have the same publisher connect automatically. For more information on snap content interfaces please refer to the snapcraft.io [Content Interface](https://snapcraft.io/docs/content-interface) documentation.
 
 ### Autostart
-By default, the edgex-device-camera disables its service on install, as the expectation is that the default profile configuration files will be customized, and thus this behavior allows the profile ```configuration.toml``` files in $SNAP_DATA to be modified before the service is first started.
+By default, the edgex-device-gpio disables its service on install, as the expectation is that the default profile configuration files will be customized, and thus this behavior allows the profile `configuration.toml` files in $SNAP_DATA to be modified before the service is first started.
 
-This behavior can be overridden by setting the ```autostart``` configuration setting to "true". This is useful when configuration and/or device profiles are being provided via configuration or gadget snap content interface.
+This behavior can be overridden by setting the `autostart` configuration setting to "true". This is useful when configuration and/or device profiles are being provided via configuration or gadget snap content interface.
 
 **Note** - this option is typically set from a gadget snap.
 
@@ -128,11 +156,20 @@ the overrides will be picked up when the services are first started.
 The following syntax is used to specify service-specific configuration overrides:
 
 
-```env.<stanza>.<config option>```
+```
+env.<stanza>.<config option>
+```
+
 For instance, to setup an override of the service's Port use:
-```$ sudo snap set edgex-device-camera env.service.port=2112```
+```
+$ sudo snap set edgex-device-gpio env.service.port=2112
+```
+
 And restart the service:
-```$ sudo snap restart edgex-device-camera.device-camera```
+```
+$ sudo snap restart edgex-device-gpio.device-gpio
+```
+
 **Note** - at this time changes to configuration values in the [Writable] section are not supported.
 For details on the mapping of configuration options to Config options, please refer to "Service Environment Configuration Overrides".
 
