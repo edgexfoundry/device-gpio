@@ -22,10 +22,8 @@ You can see the current revisions available for your machine's architecture by r
 $ snap info edgex-device-gpio
 ```
 
-Note that the application requires access to GPIO and by default the snap only allows that via the [`gpio`](https://snapcraft.io/docs/gpio-interface) interface.
-This is because the snap has strict confinement in place. 
-
-The `gpio` interface should be provided by a gadget snap. For example, the official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image included that gadget. Alternative to allowing strict access via the gadget snap, it is possible to install the EdgeX Device GPIO snap in development mode (using `--devmode` flag) which disables security confinement and automatic upgrades.
+Note that the application requires access to GPIO and by default the snap only allows that via the [`gpio`](https://snapcraft.io/docs/gpio-interface) interface when running on confined environments.
+For more details, refer to the [GPIO Access](GPIO-Access) section below.
 
 The latest stable version of the snap can be installed using:
 
@@ -74,7 +72,15 @@ ensures that as well as starting the service now, it will be automatically start
 $ sudo snap start --enable edgex-device-gpio.device-gpio
 ```
 
-### Allowing access to the GPIO
+### GPIO Access
+This snap has strict confinement in place which means that the access to interfaces are subject to various security measures. 
+On Linux distributions will full confinement support such as Ubuntu Core, Server or Desktop, the GPIO access is possible via the gpio interface, provided by a gadget snap. 
+The official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image includes that gadget.
+
+On a Linux distribution without full confinement support, `device-gpio` may be able to access the GPIO directly without any snap interface.
+
+In development environments, it is possible to install the snap in dev mode (using `--devmode` flag which disables security confinement and automatic upgrades) to allow direct GPIO access.
+
 The `gpio` interface provides slots for each GPIO channel. The slots can be listed using:
 ```bash
 $ sudo snap interface gpio
@@ -108,14 +114,14 @@ The `device-config` content interface allows another snap to seed this device
 snap with both a configuration file and one or more device profiles. 
 
 
-To use, create a new snap with a directory containing the configuration and device profile files. Your snapcraft.yaml file then needs to define a slot with read access to the directory you are sharing.
+To use, create a new snap with a directory containing the configuration and device profile files. Your `snapcraft.yaml` file then needs to define a slot with read access to the directory you are sharing.
 
 ```
 slots:
   device-config:
     interface: content  
     content: device-config
-    write: 
+    read: 
       - $SNAP/config
 ```
 
