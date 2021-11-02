@@ -6,7 +6,15 @@ adopt-info: device-gpio
 
 summary: EdgeX Device GPIO
 description: |
-  TBA
+  EdgeX Device GPIO is a device service for connecting GPIO devices to EdgeX Foundry.
+
+  ** Functionality **
+  * This device service uses sysfs ABI (default) or chardev ABI (experiment) 
+    to control GPIO devices For a connected GPIO device, update the configuration files, 
+    and then start to read or write data from GPIO device
+  * This device service ONLY works on Linux system
+
+  More info: https://github.com/edgexfoundry/device-camera-go/tree/main/snap
   
 grade: stable
 confinement: strict
