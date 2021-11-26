@@ -13,8 +13,8 @@ GPIO Micro Service - device service for connecting GPIO devices to EdgeX
 
 ## Usage
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command
-- The gpio device service can contains many pre-defined devices which were defined by `res/devices/device.custom.gpio.toml` such as `GPIO-Device01`. These devices are created by the GPIO device service in core metadata when the service first initializes
-- Device profiles(`/res/profiles/device.custom.gpio.yaml`) are used to describe the actual GPIO hardware of a device and allow individual gpios to be given human-readable names/aliases
+- The gpio device service can contains many pre-defined devices which were defined by [device.custom.gpio.toml](cmd/res/devices/device.custom.gpio.toml) such as `GPIO-Device01`. These devices are created by the GPIO device service in core metadata when the service first initializes
+- Device profiles ([device.custom.gpio.yaml](cmd/res/profiles/device.custom.gpio.yaml)) are used to describe the actual GPIO hardware of a device and allow individual gpios to be given human-readable names/aliases
 - After the gpio device service has started, we can read or write these corresponding pre-defined devices
 
 ```yaml
@@ -147,36 +147,34 @@ Now if you test gpio17 of raspberry pi 4b , it is outputting high voltage.
 Assume we have another GPIO device (used for button detection) connected to pin 66 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
 
 ```shell
-$ curl http://localhost:59882/api/v2/device/name/GPIO-Device01/Power
+$ curl http://localhost:59882/api/v2/device/name/GPIO-Device01/Switch
 ```
 
 Here, we post some results:
 
 ```bash
 {
+  "apiVersion": "v2",
+  "statusCode": 200,
+  "event": {
     "apiVersion": "v2",
-    "statusCode": 200,
-    "event": {
-        "apiVersion": "v2",
-        "id": "66e3916f-bac2-4dc6-a53f-befc09a0b888",
+    "id": "a6104256-92a4-41a8-952a-396cd3dabe25",
+    "deviceName": "GPIO-Device01",
+    "profileName": "Custom-GPIO-Device",
+    "sourceName": "Switch",
+    "origin": 1634221479227566300,
+    "readings": [
+      {
+        "id": "240dc2ea-d69f-4229-94c4-3ad0507cf657",
+        "origin": 1634221479227566300,
         "deviceName": "GPIO-Device01",
+        "resourceName": "Switch",
         "profileName": "Custom-GPIO-Device",
-        "sourceName": "Power",
-        "origin": 1631010353930524856,
-        "readings": [
-            {
-                "id": "53e13da0-e2a4-42a0-8a68-54d0cbacbc12",
-                "origin": 1631010353930524856,
-                "deviceName": "GPIO-Device01",
-                "resourceName": "Power",
-                "profileName": "Custom-GPIO-Device",
-                "valueType": "Bool",
-                "binaryValue": null,
-                "mediaType": "",
-                "value": "false"
-            }
-        ]
-    }
+        "valueType": "Bool",
+        "value": "false"
+      }
+    ]
+  }
 }
 ```
 
@@ -188,7 +186,7 @@ Add the `device-gpio` to the docker-compose.yml of edgex foundry 2.0-Ireland.
 
 ```yml
 ...
-	device-gpio:
+    device-gpio:
         container_name: edgex-device-gpio
         depends_on:
         - consul
@@ -210,7 +208,7 @@ Add the `device-gpio` to the docker-compose.yml of edgex foundry 2.0-Ireland.
         networks:
           edgex-network: {}
         ports:
-        - 49994:49994/tcp
+        - 59910:59910/tcp
         read_only: false
         privileged: true
         volumes:
