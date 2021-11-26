@@ -14,13 +14,15 @@ VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
 GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio.Version=$(VERSION)"
 
+tidy:
+	go mod tidy
+
 build: $(MICROSERVICES)
 
 tidy:
 	go mod tidy
 
 cmd/device-gpio:
-	go mod tidy
 	$(GOCGO) build $(GOFLAGS) -o $@ ./cmd
 
 test:
