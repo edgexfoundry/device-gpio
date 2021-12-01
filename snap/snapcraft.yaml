@@ -58,8 +58,7 @@ apps:
 plugs:
   device-config:
     interface: content
-    content: device-config
-    target: $SNAP_DATA/config/device-gpio/res
+    target: $SNAP_DATA/config/device-gpio
 
 parts:
     
