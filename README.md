@@ -144,7 +144,7 @@ Now if you test gpio17 of raspberry pi 4b , it is outputting high voltage.
 
 
 ### Read value from GPIO
-Assume we have another GPIO device (used for button detection) connected to pin 66 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
+Assume we have another GPIO device (used for button detection) connected to pin 22 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
 
 ```shell
 $ curl http://localhost:59882/api/v2/device/name/GPIO-Device01/Switch
