@@ -34,6 +34,19 @@ Type = "consul"
   Host = "localhost"
   Port = 59881
 
+# Only used when EDGEX_SECURITY_SECRET_STORE=true which is now required for secure Consul
+[SecretStore]
+Type = "vault"
+Host = "localhost"
+Port = 8200
+Path = "device-gpio/"
+Protocol = "http"
+RootCaCertPath = ""
+ServerName = ""
+TokenFile = "/tmp/edgex/secrets/device-gpio/secrets-token.json"
+  [SecretStore.Authentication]
+  AuthType = "X-Vault-Token"
+
 [MessageQueue]
 Protocol = "redis"
 Host = "localhost"
@@ -53,19 +66,6 @@ PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name
   AutoReconnect = "true"
   ConnectTimeout = "5" # Seconds
   SkipCertVerify = "false" # Only used if Cert/Key file or Cert/Key PEMblock are specified
-
-# Only used when EDGEX_SECURITY_SECRET_STORE=true which is now required for secure Consul
-[SecretStore]
-Type = "vault"
-Host = "localhost"
-Port = 8200
-Path = "device-gpio/"
-Protocol = "http"
-RootCaCertPath = ""
-ServerName = ""
-TokenFile = "/tmp/edgex/secrets/device-gpio/secrets-token.json"
-  [SecretStore.Authentication]
-  AuthType = "X-Vault-Token"
 
 [Driver]
   Interface = "sysfs"

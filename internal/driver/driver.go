@@ -50,16 +50,15 @@ func (s *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsModels.As
 		panic(fmt.Errorf("unsupport GPIO ABI interface: %v", config.Abi_driver))
 	}
 	s.config = config
-	s.lc.Infof(fmt.Sprintf("Interface: %v", config.Abi_driver))
-	s.lc.Infof(fmt.Sprintf("ChipSelected: %v", config.Chip_selected))
+	s.lc.Infof("Interface: %v", config.Abi_driver)
+	s.lc.Infof("ChipSelected: %v", config.Chip_selected)
 	return nil
 }
 
 // HandleReadCommands triggers a protocol Read operation for the specified device.
 func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
 
-	s.lc.Infof(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
-	// fmt.Println(fmt.Sprintf("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes))
+	s.lc.Infof("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes)
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
 		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
 		if err != nil {
@@ -93,7 +92,7 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 // command.
 func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest,
 	params []*dsModels.CommandValue) error {
-	s.lc.Infof(fmt.Sprintf("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params))
+	s.lc.Infof("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params)
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
 		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
 		if err != nil {

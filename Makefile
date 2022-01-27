@@ -7,7 +7,7 @@ MICROSERVICES=cmd/device-gpio
 
 .PHONY: $(MICROSERVICES)
 
-DOCKERS=docker_device_gpio_go
+DOCKERS=docker_device_gpio
 .PHONY: $(DOCKERS)
 
 VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
