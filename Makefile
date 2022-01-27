@@ -14,9 +14,6 @@ VERSION=$(shell cat ./VERSION 2>/dev/null || echo 0.0.0)
 GIT_SHA=$(shell git rev-parse HEAD)
 GOFLAGS=-ldflags "-X github.com/edgexfoundry/device-gpio.Version=$(VERSION)"
 
-tidy:
-	go mod tidy
-
 build: $(MICROSERVICES)
 
 tidy:
@@ -26,8 +23,8 @@ cmd/device-gpio:
 	$(GOCGO) build $(GOFLAGS) -o $@ ./cmd
 
 test:
-	go test ./... -coverprofile=coverage.out
-	go vet ./...
+	$(GOCGO) test ./... -coverprofile=coverage.out
+	$(GOCGO) vet ./...
 	gofmt -l $$(find . -type f -name '*.go'| grep -v "/vendor/")
 	[ "`gofmt -l $$(find . -type f -name '*.go'| grep -v "/vendor/")`" = "" ]
 	./bin/test-attribution-txt.sh
