@@ -1,5 +1,5 @@
 # EdgeX GPIO Device Service Snap
-[![snap store badge](https://raw.githubusercontent.com/snapcore/snap-store-badges/master/EN/%5BEN%5D-snap-store-black-uneditable.png)](https://snapcraft.io/edgex-device-gpio)
+[![snap store badge](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/edgex-device-gpio)
 
 This folder contains snap packaging for the EdgeX GPIO Device Service Snap
 
