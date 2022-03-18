@@ -6,15 +6,6 @@ This folder contains snap packaging for the EdgeX GPIO Device Service Snap
 The snap currently supports the following architectures: `amd64`, `arm64`, `armhf`
 
 ## Installation
-
-### Installing snapd
-The snap can be installed on any system that supports snaps. You can see how to install 
-snaps on your system [here](https://snapcraft.io/docs/installing-snapd).
-
-However for full security confinement, the snap should be installed on an 
-Ubuntu 18.04 LTS or later (Desktop or Server), or a system running Ubuntu Core 18 or later.
-
-### Installing EdgeX Device GPIO as a snap
 The snap is published in the snap store at https://snapcraft.io/edgex-device-gpio.
 You can see the current revisions available for your machine's architecture by running the command:
 
@@ -22,7 +13,8 @@ You can see the current revisions available for your machine's architecture by r
 $ snap info edgex-device-gpio
 ```
 
-Note that the application requires access to GPIO and by default the snap only allows that via the [`gpio`](https://snapcraft.io/docs/gpio-interface) interface when running on confined environments.
+Note that the application requires access to GPIO on the device.
+When running in confined environments, the snap only allows that access via the [`gpio`](https://snapcraft.io/docs/gpio-interface).
 For more details, refer to the [GPIO Access](GPIO-Access) section below.
 
 The latest stable version of the snap can be installed using:
@@ -37,41 +29,14 @@ The latest development version of the snap can be installed using:
 $ sudo snap install edgex-device-gpio --edge
 ```
 
-**Note** - the snap has only been tested on Ubuntu Core (official Raspberry Pi images) and Ubuntu Server (dev mode).
-
 ## Snap configuration
-### Startup
-Device services implement a service dependency check on startup which ensures that all of the runtime dependencies of a particular service are met before the service transitions to active state.
-
-Snapd doesn't support orchestration between services in different snaps. It is therefore possible on a reboot for a device service to come up faster than all of the required services running in the main edgexfoundry snap. If this happens, it's possible that the device service repeatedly fails startup, and if it exceeds the systemd default limits, then it might be left in a failed state. This situation might be more likely on constrained hardware (e.g. RPi).
-
-This snap therefore implements a basic retry loop with a maximum duration and sleep interval. If the dependent services are not available, the service sleeps for the defined interval (default: 1s) and then tries again up to a maximum duration (default: 60s). These values can be overridden with the following commands:
-    
-To change the maximum duration, use the following command:
-
-```bash
-$ sudo snap set edgex-device-gpio startup-duration=60
-```
-
-To change the interval between retries, use the following command:
-
-```bash
-$ sudo snap set edgex-device-gpio startup-interval=1
-```
-
-The service can then be started as follows. The "--enable" option
-ensures that as well as starting the service now, it will be automatically started on boot:
-
-```bash
-$ sudo snap start --enable edgex-device-gpio
-```
-
 ### GPIO Access
-This snap has strict confinement in place which means that the access to interfaces are subject to various security measures. 
-On Linux distributions will full confinement support such as Ubuntu Core, Server or Desktop, the GPIO access is possible via the gpio interface, provided by a gadget snap. 
+This snap is strictly confined which means that the access to interfaces are subject to various security measures.
+
+On Linux distributions will full snap confinement support such as Ubuntu Core, the GPIO access is possible via the [gpio interface](https://snapcraft.io/docs/gpio-interface), provided by a gadget snap. 
 The official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image includes that gadget.
 
-On a Linux distribution without full snap confinement support, the snap may be able to access the GPIO directly without any snap interface.
+On a Linux distribution without full snap confinement support, the snap may be able to access the GPIO directly without any snap interface and manual connections.
 
 In development environments, it is possible to install the snap in dev mode (using `--devmode` flag which disables security confinement and automatic upgrades) and allows direct GPIO access.
 
@@ -100,6 +65,32 @@ $ sudo snap connections
 Interface        Plug                            Slot              Notes
 gpio             edgex-device-gpio:gpio          pi:bcm-gpio-17    manual
 …
+```
+
+### Startup
+Device services implement a service dependency check on startup which ensures that all of the runtime dependencies of a particular service are met before the service transitions to active state.
+
+Snapd doesn't support orchestration between services in different snaps. It is therefore possible on a reboot for a device service to come up faster than all of the required services running in the main edgexfoundry snap. If this happens, it's possible that the device service repeatedly fails startup, and if it exceeds the systemd default limits, then it might be left in a failed state. This situation might be more likely on constrained hardware (e.g. RPi).
+
+This snap therefore implements a basic retry loop with a maximum duration and sleep interval. If the dependent services are not available, the service sleeps for the defined interval (default: 1s) and then tries again up to a maximum duration (default: 60s). These values can be overridden with the following commands:
+    
+To change the maximum duration, use the following command:
+
+```bash
+$ sudo snap set edgex-device-gpio startup-duration=60
+```
+
+To change the interval between retries, use the following command:
+
+```bash
+$ sudo snap set edgex-device-gpio startup-interval=1
+```
+
+The service can then be started as follows. The "--enable" option
+ensures that as well as starting the service now, it will be automatically started on boot:
+
+```bash
+$ sudo snap start --enable edgex-device-gpio
 ```
 
 ### Vault token
