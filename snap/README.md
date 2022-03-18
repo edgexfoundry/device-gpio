@@ -40,7 +40,7 @@ $ sudo snap install edgex-device-gpio --edge
 **Note** - the snap has only been tested on Ubuntu Core (official Raspberry Pi images) and Ubuntu Server (dev mode).
 
 ## Snap configuration
-
+### Startup
 Device services implement a service dependency check on startup which ensures that all of the runtime dependencies of a particular service are met before the service transitions to active state.
 
 Snapd doesn't support orchestration between services in different snaps. It is therefore possible on a reboot for a device service to come up faster than all of the required services running in the main edgexfoundry snap. If this happens, it's possible that the device service repeatedly fails startup, and if it exceeds the systemd default limits, then it might be left in a failed state. This situation might be more likely on constrained hardware (e.g. RPi).
@@ -102,6 +102,10 @@ gpio             edgex-device-gpio:gpio          pi:bcm-gpio-17    manual
 …
 ```
 
+### Vault token
+When running this snap and the edgexfoundry snap on the same machine, the vault token can be provisioned via the `edgex-secretstore-token` content interface. 
+For details, please refer [here](https://github.com/edgexfoundry/edgex-go/tree/jakarta/snap#interfaces).
+
 ### Using a content interface to set device configuration
 
 The `device-config` content interface allows another snap to seed this snap with configuration directories under `$SNAP_DATA/config/device-gpio`.
@@ -148,7 +152,7 @@ $ sudo snap restart edgex-device-gpio.device-gpio
 **Note** - at this time changes to configuration values in the [Writable] section are not supported.
 For details on the mapping of configuration options to Config options, please refer to "Service Environment Configuration Overrides".
 
-## Service Environment Configuration Overrides
+### Service Environment Configuration Overrides
 **Note** - all of the configuration options below must be specified with the prefix: 'env.'
 
 ```
