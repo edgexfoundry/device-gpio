@@ -31,12 +31,6 @@ The latest stable version of the snap can be installed using:
 $ sudo snap install edgex-device-gpio
 ```
 
-A specific release of the snap can be installed from a dedicated channel. For example, to install the 2.1 (Jakarta) release:
-
-```bash
-$ sudo snap install edgex-device-gpio --channel=2.1
-```
-
 The latest development version of the snap can be installed using:
 
 ```bash
@@ -69,7 +63,7 @@ The service can then be started as follows. The "--enable" option
 ensures that as well as starting the service now, it will be automatically started on boot:
 
 ```bash
-$ sudo snap start --enable edgex-device-gpio.device-gpio
+$ sudo snap start --enable edgex-device-gpio
 ```
 
 ### GPIO Access
@@ -77,9 +71,9 @@ This snap has strict confinement in place which means that the access to interfa
 On Linux distributions will full confinement support such as Ubuntu Core, Server or Desktop, the GPIO access is possible via the gpio interface, provided by a gadget snap. 
 The official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image includes that gadget.
 
-On a Linux distribution without full confinement support, `device-gpio` may be able to access the GPIO directly without any snap interface.
+On a Linux distribution without full snap confinement support, the snap may be able to access the GPIO directly without any snap interface.
 
-In development environments, it is possible to install the snap in dev mode (using `--devmode` flag which disables security confinement and automatic upgrades) to allow direct GPIO access.
+In development environments, it is possible to install the snap in dev mode (using `--devmode` flag which disables security confinement and automatic upgrades) and allows direct GPIO access.
 
 The `gpio` interface provides slots for each GPIO channel. The slots can be listed using:
 ```bash
@@ -110,36 +104,11 @@ gpio             edgex-device-gpio:gpio          pi:bcm-gpio-17    manual
 
 ### Using a content interface to set device configuration
 
-The `device-config` content interface allows another snap to seed this device
-snap with both a configuration file and one or more device profiles. 
+The `device-config` content interface allows another snap to seed this snap with configuration directories under `$SNAP_DATA/config/device-gpio`.
 
+Note that the `device-config` content interface does NOT support seeding of the Secret Store Token because that file is expected at a different path.
 
-To use, create a new snap with a directory containing the configuration and device profile files. Your `snapcraft.yaml` file then needs to define a slot with read access to the directory you are sharing.
-
-```
-slots:
-  device-config:
-    interface: content  
-    content: device-config
-    read: 
-      - $SNAP/config
-```
-
-where `$SNAP/config` is configuration directory your snap is providing to the device snap.
-
-Then connect the plug in the device snap to the slot in your snap, which will replace the configuration in the device snap. Do this with:
-
-```bash
-$ sudo snap connect edgex-device-gpio:device-config your-snap:device-config
-```
-
-This needs to be done before the device service is started for the first time. Once you have set the configuration the device service can be started and it will then be configurated using the settings you provided:
-
-```bash
-$ sudo snap start edgex-device-gpio.device-gpio
-```
-
-**Note** - content interfaces from snaps installed from the Snap Store that have the same publisher connect automatically. For more information on snap content interfaces please refer to the snapcraft.io [Content Interface](https://snapcraft.io/docs/content-interface) documentation.
+Please refer to [edgex-config-provider](https://github.com/canonical/edgex-config-provider), for an example and further instructions.
 
 ### Autostart
 By default, the edgex-device-gpio disables its service on install, as the expectation is that the default profile configuration files will be customized, and thus this behavior allows the profile `configuration.toml` files in $SNAP_DATA to be modified before the service is first started.

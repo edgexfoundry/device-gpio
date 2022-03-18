@@ -16,7 +16,6 @@ architectures:
 slots:
   edgex-secretstore-token:
     interface: content
-    content: edgex-secretstore-token
     source:
       write: [$SNAP_DATA/device-gpio]
 
@@ -27,21 +26,17 @@ apps:
       - bin/startup-env-var.sh
     environment:
       CONF_ARG: "--confdir=$SNAP_DATA/config/device-gpio/res"
-      # Use Registry:
       REGISTRY_ARG: "--registry" 
-      # Use Configuration Provider service at the specified URL:
       CONFPROVIDER_ARG: "--cp=consul.http://localhost:8500"
       DEVICE_PROFILESDIR: $SNAP_DATA/config/device-gpio/res/profiles
       DEVICE_DEVICESDIR: $SNAP_DATA/config/device-gpio/res/devices
       SECRETSTORE_TOKENFILE: $SNAP_DATA/device-gpio/secrets-token.json
     daemon: simple
-    passthrough:
-      install-mode: disable
+    install-mode: disable
     plugs:
       - network
       - network-bind
-      # Note: the gpio interface in not connected automatically. 
-      - gpio
+      - gpio # not connected automatically
 
 plugs:
   device-config:
