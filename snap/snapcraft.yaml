@@ -1,0 +1,106 @@
+name: edgex-device-gpio
+base: core20 
+license: Apache-2.0
+adopt-info: metadata
+  
+grade: stable
+confinement: strict
+
+epoch: 0
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+
+slots:
+  edgex-secretstore-token:
+    interface: content
+    source:
+      write: [$SNAP_DATA/device-gpio]
+
+apps:
+  device-gpio:
+    command: bin/device-gpio $CONF_ARG
+    command-chain:
+      - bin/startup-env-var.sh
+    environment:
+      CONF_ARG: "--confdir=$SNAP_DATA/config/device-gpio/res"
+      REGISTRY_ARG: "--registry" 
+      CONFPROVIDER_ARG: "--cp=consul.http://localhost:8500"
+      DEVICE_PROFILESDIR: $SNAP_DATA/config/device-gpio/res/profiles
+      DEVICE_DEVICESDIR: $SNAP_DATA/config/device-gpio/res/devices
+      SECRETSTORE_TOKENFILE: $SNAP_DATA/device-gpio/secrets-token.json
+    daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
+      - gpio # not connected automatically
+
+plugs:
+  device-config:
+    interface: content
+    target: $SNAP_DATA/config/device-gpio
+
+parts:
+    
+  device-gpio:
+    after: [metadata]
+    source: .
+    plugin: make
+    build-packages: [git, libzmq3-dev, pkg-config]
+    stage-packages: [libzmq5]
+    build-snaps: [go/1.17/stable]
+    override-build: |
+      cd $SNAPCRAFT_PART_SRC
+
+      # the version is needed for the build
+      cat ./VERSION
+
+      make build
+      install -DT cmd/device-gpio $SNAPCRAFT_PART_INSTALL/bin/device-gpio
+
+      # copy all config files
+      mkdir -p $SNAPCRAFT_PART_INSTALL/config/device-gpio
+      cp -rv cmd/res $SNAPCRAFT_PART_INSTALL/config/device-gpio/res
+
+      install -DT Attribution.txt $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/Attribution.txt
+      install -DT LICENSE         $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/LICENSE
+
+  hooks:
+    source: snap/local/hooks
+    plugin: make
+    build-snaps: [go/1.17/stable]
+    override-build: |
+      cd $SNAPCRAFT_PART_SRC
+      make build
+      install -DT ./cmd/configure/configure $SNAPCRAFT_PART_INSTALL/snap/hooks/configure
+      install -DT ./cmd/install/install $SNAPCRAFT_PART_INSTALL/snap/hooks/install
+      
+  runtime-helpers:
+    plugin: dump
+    source: snap/local/runtime-helpers
+
+  metadata:
+    plugin: nil
+    source: https://github.com/canonical/edgex-snap-metadata.git
+    source-branch: appstream
+    source-depth: 1
+    override-build: |
+      # install the icon at the default internal path
+      install -DT edgex-snap-icon.png \
+        $SNAPCRAFT_PART_INSTALL/meta/gui/icon.png
+      # change to this project's repo to get the version
+      cd $SNAPCRAFT_PROJECT_DIR
+      if git describe ; then
+        VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')
+      else
+        VERSION="0.0.0"
+      fi
+      
+      # write version to file for the build
+      echo $VERSION > ./VERSION
+      # set the version of this snap
+      snapcraftctl set-version $VERSION
+    parse-info: [edgex-device-gpio.metainfo.xml]
