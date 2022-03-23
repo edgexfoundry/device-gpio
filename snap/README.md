@@ -14,7 +14,7 @@ $ snap info edgex-device-gpio
 ```
 
 Note that the application requires access to GPIO on the device.
-When running in confined environments, the snap only allows that access via the [`gpio`](https://snapcraft.io/docs/gpio-interface).
+When running in confined environments, the snap only allows that access via the [gpio interface](https://snapcraft.io/docs/gpio-interface).
 For more details, refer to the [GPIO Access](GPIO-Access) section below.
 
 The latest stable version of the snap can be installed using:
@@ -33,10 +33,11 @@ $ sudo snap install edgex-device-gpio --edge
 ### GPIO Access
 This snap is strictly confined which means that the access to interfaces are subject to various security measures.
 
-On Linux distributions will full snap confinement support such as Ubuntu Core, the GPIO access is possible via the [gpio interface](https://snapcraft.io/docs/gpio-interface), provided by a gadget snap. 
-The official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image includes that gadget.
+On a Linux distribution without snap confinement for GPIO (e.g. Raspberry Pi OS 11), the snap may be able to access the GPIO directly, without any snap interface and manual connections.
 
-On a Linux distribution without full snap confinement support, the snap may be able to access the GPIO directly without any snap interface and manual connections.
+On Linux distributions with snap confinement for GPIO such as Ubuntu Core, the GPIO access is possible via the [gpio interface](https://snapcraft.io/docs/gpio-interface), provided by a gadget snap. 
+The official [Raspberry Pi Ubuntu Core](https://ubuntu.com/download/raspberry-pi-core) image includes that gadget.
+It is NOT possible to use this snap on Linux distributions that have the GPIO confinement but not the interface (e.g. Ubuntu Server 20.04), unless for development purposes.
 
 In development environments, it is possible to install the snap in dev mode (using `--devmode` flag which disables security confinement and automatic upgrades) and allows direct GPIO access.
 
