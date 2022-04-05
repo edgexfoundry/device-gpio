@@ -23,13 +23,13 @@ func (s *Driver) exportBySysfs(line uint8) error {
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		return nil
 	}
-	return ioutil.WriteFile("/sys/class/gpio/export", []byte(fmt.Sprintf("%d\n", line)), 0644)
+	return ioutil.WriteFile("/sys/class/gpio/export", []byte(fmt.Sprintf("%d\n", line)), 0644) //nolint:gosec
 }
 
 func (s *Driver) unexportBySysfs(line uint8) error {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		return ioutil.WriteFile("/sys/class/gpio/unexport", []byte(fmt.Sprintf("%d\n", line)), 0644)
+		return ioutil.WriteFile("/sys/class/gpio/unexport", []byte(fmt.Sprintf("%d\n", line)), 0644) //nolint:gosec
 	}
 	return nil
 }
@@ -46,23 +46,9 @@ func (s *Driver) setDirectionBySysfs(line uint8, direction string) error {
 		default:
 			return errors.New("invalid direction")
 		}
-		return ioutil.WriteFile(fmt.Sprintf("/sys/class/gpio/gpio%d/direction", line), []byte(way), 0644)
+		return ioutil.WriteFile(fmt.Sprintf("/sys/class/gpio/gpio%d/direction", line), []byte(way), 0644) //nolint:gosec
 	} else {
 		return errors.New("unexpected behavior, the GPIO pin has not been exported")
-	}
-}
-
-func (s *Driver) getDirectionBySysfs(line uint8) (string, error) {
-	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
-	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		direction, err := ioutil.ReadFile(fmt.Sprintf("/sys/class/gpio/gpio%d/direction", line))
-		if err != nil {
-			return "", err
-		} else {
-			return strings.Replace(string(direction), "\n", "", -1), err
-		}
-	} else {
-		return "", errors.New("unexpected behavior, the GPIO pin has not been exported")
 	}
 }
 
@@ -75,7 +61,7 @@ func (s *Driver) setValueBySysfs(line uint8, value bool) error {
 		} else {
 			tmp = "0"
 		}
-		return ioutil.WriteFile(fmt.Sprintf("/sys/class/gpio/gpio%d/value", line), []byte(tmp), 0644)
+		return ioutil.WriteFile(fmt.Sprintf("/sys/class/gpio/gpio%d/value", line), []byte(tmp), 0644) //nolint:gosec
 	} else {
 		return errors.New("unexpected behavior, the GPIO pin has not been exported")
 	}
