@@ -198,9 +198,6 @@ func (s *Driver) getGPIO(line string) (bool, error) {
 				// waiting for gpio device fd
 				time.Sleep(1 * time.Second)
 			}
-			if err = s.setDirectionBySysfs(valid_line, "in"); err != nil {
-				return false, err
-			}
 			return s.getValueBySysfs(valid_line)
 		}
 	case "chardev":
