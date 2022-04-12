@@ -1,0 +1,10 @@
+# Example GPIO LED Device
+[[DeviceList]]
+  Name = "GPIO-LED01"
+  ProfileName = "LED-GPIO-Device"
+  Description = "Example of LED gpio device"
+  Labels = ["led-gpio"]
+  [DeviceList.Protocols]
+  [DeviceList.Protocols.other]
+    Address = 'device-led-01'
+    Port = '301'

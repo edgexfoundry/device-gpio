@@ -1,0 +1,16 @@
+name: "LED-GPIO-Device"
+manufacturer: "IOTech Systems"
+model: "v01"
+labels:
+  - "gpio"
+description: "Example of LED gpio device"
+
+deviceResources:
+  -
+    name: "LED"
+    isHidden: false
+    description: "yellow LED"
+    attributes: { line: 18, defaultDirection: "out"}
+    properties:
+      valueType: "Bool"
+      readWrite: "RW"

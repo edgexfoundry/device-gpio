@@ -1,7 +1,7 @@
 // -*- Mode: Go; indent-tabs-mode: t -*-
 //
 // Copyright (C) 2018 Canonical Ltd
-// Copyright (C) 2018-2019 IOTech Ltd
+// Copyright (C) 2018-2019, 2022 IOTech Ltd
 // Copyright (C) 2021 Jiangxing Intelligence Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -73,10 +73,16 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 	}
 	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
 
+	defaultDirection, ok := reqs[0].Attributes["defaultDirection"].(string)
+	if !ok {
+		defaultDirection = "out"
+		s.lc.Debug("No default direction provided - using default out direction")
+	}
+
 	// now := time.Now().UnixNano()
 
 	for _, req := range reqs {
-		value, err := s.getGPIO(lineNumStr)
+		value, err := s.getGPIO(lineNumStr, defaultDirection)
 		if err != nil {
 			return nil, err
 		}
@@ -107,12 +113,18 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 	}
 	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
 
+	defaultDirection, ok := reqs[0].Attributes["defaultDirection"].(string)
+	if !ok {
+		defaultDirection = "out"
+		s.lc.Debug("No default direction provided - using default out direction")
+	}
+
 	for _, param := range params {
 		value, err := param.BoolValue()
 		if err != nil {
 			return err
 		}
-		if err := s.setGPIO(lineNumStr, value); err != nil {
+		if err := s.setGPIO(lineNumStr, defaultDirection, value); err != nil {
 			return err
 		}
 	}
@@ -181,7 +193,7 @@ func (s *Driver) RemoveDevice(deviceName string, protocols map[string]models.Pro
 }
 
 //
-func (s *Driver) getGPIO(line string) (bool, error) {
+func (s *Driver) getGPIO(line string, direction string) (bool, error) {
 	switch s.config.Abi_driver {
 	case "sysfs":
 		{
@@ -197,6 +209,9 @@ func (s *Driver) getGPIO(line string) (bool, error) {
 				s.openedLine[line] = &gpiod.Line{}
 				// waiting for gpio device fd
 				time.Sleep(1 * time.Second)
+				if err = s.setDirectionBySysfs(valid_line, direction); err != nil {
+					return false, err
+				}
 			}
 			return s.getValueBySysfs(valid_line)
 		}
@@ -222,7 +237,7 @@ func (s *Driver) getGPIO(line string) (bool, error) {
 	return false, errors.New("invalid interface")
 }
 
-func (s *Driver) setGPIO(line string, value bool) error {
+func (s *Driver) setGPIO(line string, direction string, value bool) error {
 	switch s.config.Abi_driver {
 	case "sysfs":
 		{
@@ -234,9 +249,9 @@ func (s *Driver) setGPIO(line string, value bool) error {
 				if err := s.exportBySysfs(valid_line); err != nil {
 					return err
 				}
-			}
-			if err = s.setDirectionBySysfs(valid_line, "out"); err != nil {
-				return err
+				if err = s.setDirectionBySysfs(valid_line, direction); err != nil {
+					return err
+				}
 			}
 			return s.setValueBySysfs(valid_line, value)
 		}
