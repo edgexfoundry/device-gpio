@@ -119,7 +119,30 @@ Use the `curl` response to get the command URLs (with device and command ids) to
 }
 ```
 
+### Direction setting with sysfs
+When using sysfs, the operations to access and "read" or "write" the GPIO pins are to:
 
+1. Export the pin
+2. Set the direction (either IN or OUT)
+3. Read the pin input or write the pin value based on the direction
+4. Unexport the pin 
+
+When using sysfs, setting the direction causes the value to be reset.  Therefore, this implementation only sets the direction on opening the line to the GPIO.  After that, it is assumed the same direction is used while the pin is in use and exported.
+
+The direction is set by an optional attribute in the device profile called `defaultDirection`.  It can be set to either "in" or "out".  If it is not set, the default direction is assumed to be "out".
+
+``` yaml
+  -
+    name: "LED"
+    isHidden: false
+    description: "mocking LED"
+    attributes: { line: 27, defaultDirection: "out" }
+    properties:
+      valueType: "Bool"
+      readWrite: "W"
+```
+
+Note:  the direction should not be confused with the device profile's read/write property.  If you set the defaultDirection to "in" but then set the readWrite property to "RW" or "W", any attempt to write to the pin will result in a "permission denied" error.  For consistency sake, when your defaultDirection is "in" set readWrite to "R" only.
 
 ### Write value to GPIO
 Assume we have a GPIO device (used for power enable) connected to gpio17 on current system of raspberry pi 4b. When we write a value to GPIO, this gpio will give a high voltage.
