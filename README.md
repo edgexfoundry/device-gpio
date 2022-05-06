@@ -10,6 +10,17 @@ GPIO Micro Service - device service for connecting GPIO devices to EdgeX
 - This device service **ONLY works on Linux system**
 - This device service is contributed by [Jiangxing Intelligence](https://www.jiangxingai.com)
 
+## Packaging
+
+This component is packaged as docker image and snap.
+
+For docker, please refer to the [Dockerfile] and [Docker Compose Builder] scripts.
+
+For the snap, refer to the [snap] directory.
+
+[Dockerfile]: Dockerfile
+[Docker Compose Builder]: https://github.com/edgexfoundry/edgex-compose/tree/main/compose-builder
+[snap]: snap
 
 ## Usage
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command
