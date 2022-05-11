@@ -2,7 +2,7 @@ module github.com/edgexfoundry/device-gpio
 
 require (
 	github.com/edgexfoundry/device-sdk-go/v2 v2.1.0
-	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.1.0
+	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.2.0
 	github.com/spf13/cast v1.3.1
 	github.com/warthog618/gpiod v0.6.0
 )
@@ -19,12 +19,12 @@ require (
 	github.com/edgexfoundry/go-mod-registry/v2 v2.1.0 // indirect
 	github.com/edgexfoundry/go-mod-secrets/v2 v2.1.0 // indirect
 	github.com/fatih/color v1.9.0 // indirect
-	github.com/fxamacker/cbor/v2 v2.3.0 // indirect
-	github.com/go-kit/kit v0.11.0 // indirect
-	github.com/go-logfmt/logfmt v0.5.0 // indirect
+	github.com/fxamacker/cbor/v2 v2.4.0 // indirect
+	github.com/go-kit/log v0.2.0 // indirect
+	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.9.0 // indirect
+	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/go-redis/redis/v7 v7.3.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
@@ -49,10 +49,10 @@ require (
 	github.com/pebbe/zmq4 v1.2.7 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
-	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
-	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
-	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
+	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
 
