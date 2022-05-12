@@ -17,6 +17,7 @@
 ARG BASE=golang:1.17-alpine3.15
 FROM ${BASE} AS builder
 
+ARG MAKE="make build"
 ARG ALPINE_PKG_BASE="make git openssh-client gcc libc-dev zeromq-dev libsodium-dev"
 ARG ALPINE_PKG_EXTRA=""
 
