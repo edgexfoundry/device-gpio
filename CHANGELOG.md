@@ -11,6 +11,9 @@
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
 ## [v2.2.0] - Kamakura - 2022-05-11 - (Only compatible with the 2.x releases)
+### Features
+- **snap:** Support for environment variable injection ([#1b28166](https://github.com/edgexfoundry/device-gpio/commits/1b28166))
+
 ### Documentation 📖
 - **snap:** Move usage instructions to docs ([#27](https://github.com/edgexfoundry/device-gpio/issues/27)) ([#9aa390b](https://github.com/edgexfoundry/device-gpio/commits/9aa390b))
 
@@ -18,7 +21,6 @@
 ### Features ✨
 - Enable security hardening ([#99940ec](https://github.com/edgexfoundry/device-gpio/commits/99940ec))
 - **api:** Upgrade to v2 API ([#427c9ef](https://github.com/edgexfoundry/device-gpio/commits/427c9ef))
-- **snap:** Use updated environment variable injection ([#1b28166](https://github.com/edgexfoundry/device-gpio/commits/1b28166))
 - **snap:** Snap packaging ([#13](https://github.com/edgexfoundry/device-gpio/issues/13)) ([#7aa6e8d](https://github.com/edgexfoundry/device-gpio/commits/7aa6e8d))
 
 ### Bug Fixes 🐛
