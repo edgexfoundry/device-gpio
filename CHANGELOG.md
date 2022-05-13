@@ -10,7 +10,10 @@
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
-## [v2.2.0] - Jakarta - 2022-05-11 - (Only compatible with the 2.x releases)
+## [v2.2.0] - Kamakura - 2022-05-11 - (Only compatible with the 2.x releases)
+### Features
+- **snap:** Support for environment variable injection ([#1b28166](https://github.com/edgexfoundry/device-gpio/commits/1b28166))
+
 ### Documentation 📖
 - **snap:** Move usage instructions to docs ([#27](https://github.com/edgexfoundry/device-gpio/issues/27)) ([#9aa390b](https://github.com/edgexfoundry/device-gpio/commits/9aa390b))
 
@@ -18,10 +21,7 @@
 ### Features ✨
 - Enable security hardening ([#99940ec](https://github.com/edgexfoundry/device-gpio/commits/99940ec))
 - **api:** Upgrade to v2 API ([#427c9ef](https://github.com/edgexfoundry/device-gpio/commits/427c9ef))
-- **snap:** Bump edgex-snap-hooks to v2.2.0-beta.3 ([#849856e](https://github.com/edgexfoundry/device-gpio/commits/849856e))
-- **snap:** Use updated environment variable injection ([#1b28166](https://github.com/edgexfoundry/device-gpio/commits/1b28166))
 - **snap:** Snap packaging ([#13](https://github.com/edgexfoundry/device-gpio/issues/13)) ([#7aa6e8d](https://github.com/edgexfoundry/device-gpio/commits/7aa6e8d))
-- **snap:** Bump edgex-snap-hooks to v2.2.0-beta.5 ([#55ae9f2](https://github.com/edgexfoundry/device-gpio/commits/55ae9f2))
 
 ### Bug Fixes 🐛
 - Remove set of direction of a get GPIO or read ([#24](https://github.com/edgexfoundry/device-gpio/issues/24)) ([#b9afc87](https://github.com/edgexfoundry/device-gpio/commits/b9afc87))
