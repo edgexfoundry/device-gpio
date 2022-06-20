@@ -1,7 +1,7 @@
 module github.com/edgexfoundry/device-gpio
 
 require (
-	github.com/edgexfoundry/device-sdk-go/v2 v2.2.1-dev.5
+	github.com/edgexfoundry/device-sdk-go/v2 v2.2.1-dev.6
 	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.2.0
 	github.com/spf13/cast v1.3.1
 	github.com/warthog618/gpiod v0.6.0
