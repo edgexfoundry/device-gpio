@@ -1,5 +1,7 @@
 module github.com/edgexfoundry/device-gpio
 
+go 1.18
+
 require (
 	github.com/edgexfoundry/device-sdk-go/v2 v2.2.1-dev.11
 	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.2.0
@@ -65,5 +67,3 @@ require (
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-go 1.17
