@@ -21,13 +21,13 @@ slots:
 
 apps:
   device-gpio:
-    command: bin/device-gpio $CONF_ARG
+    command: bin/device-gpio $CONFIG_PRO_ARG $CONF_ARG $REGISTRY_ARG
     command-chain:
-      - bin/startup-env-var.sh
+      - bin/source-env-file.sh
     environment:
+      CONFIG_PRO_ARG: "--cp=consul.http://localhost:8500"
       CONF_ARG: "--confdir=$SNAP_DATA/config/device-gpio/res"
-      REGISTRY_ARG: "--registry" 
-      CONFPROVIDER_ARG: "--cp=consul.http://localhost:8500"
+      REGISTRY_ARG: "--registry"
       DEVICE_PROFILESDIR: $SNAP_DATA/config/device-gpio/res/profiles
       DEVICE_DEVICESDIR: $SNAP_DATA/config/device-gpio/res/devices
       SECRETSTORE_TOKENFILE: $SNAP_DATA/device-gpio/secrets-token.json
@@ -44,6 +44,14 @@ plugs:
     target: $SNAP_DATA/config/device-gpio
 
 parts:
+  helper-go:
+    source: snap/local/helper-go
+    plugin: make
+    build-snaps: [ go/1.18/stable ]
+    override-build: |
+      cd $SNAPCRAFT_PART_SRC
+      make build
+      install -DT ./helper-go $SNAPCRAFT_PART_INSTALL/bin/helper-go
     
   device-gpio:
     after: [metadata]
@@ -58,29 +66,27 @@ parts:
       # the version is needed for the build
       cat ./VERSION
 
+      make tidy
       make build
+      
       install -DT cmd/device-gpio $SNAPCRAFT_PART_INSTALL/bin/device-gpio
 
-      # copy all config files
-      mkdir -p $SNAPCRAFT_PART_INSTALL/config/device-gpio
-      cp -rv cmd/res $SNAPCRAFT_PART_INSTALL/config/device-gpio/res
-
-      install -DT Attribution.txt $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/Attribution.txt
-      install -DT LICENSE         $SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio/LICENSE
-
-  hooks:
-    source: snap/local/hooks
-    plugin: make
-    build-snaps: [go/1.18/stable]
-    override-build: |
-      cd $SNAPCRAFT_PART_SRC
-      make build
-      install -DT ./cmd/configure/configure $SNAPCRAFT_PART_INSTALL/snap/hooks/configure
-      install -DT ./cmd/install/install $SNAPCRAFT_PART_INSTALL/snap/hooks/install
+      RES=$SNAPCRAFT_PART_INSTALL/config/device-gpio/res/
+      mkdir -p $RES
+      cp    cmd/res/configuration.toml $RES
+      cp -r cmd/res/devices $RES
+      cp -r cmd/res/profiles $RES
       
-  runtime-helpers:
+      DOC=$SNAPCRAFT_PART_INSTALL/usr/share/doc/device-gpio
+      mkdir -p $DOC
+      cp Attribution.txt $DOC/Attribution.txt
+      cp LICENSE $DOC/LICENSE
+      
+  local-bin:
     plugin: dump
-    source: snap/local/runtime-helpers
+    source: snap/local/bin
+    organize:
+      source-env-file.sh: bin/source-env-file.sh
 
   metadata:
     plugin: nil
