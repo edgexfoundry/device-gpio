@@ -18,6 +18,16 @@ slots:
     interface: content
     source:
       write: [$SNAP_DATA/device-gpio]
+      
+plugs:
+  device-gpio-config:
+    interface: content
+    target: $SNAP_DATA/config/device-gpio
+
+  # deprecated
+  device-config:
+    interface: content
+    target: $SNAP_DATA/config/device-gpio
 
 apps:
   device-gpio:
@@ -37,11 +47,6 @@ apps:
       - network
       - network-bind
       - gpio # not connected automatically
-
-plugs:
-  device-config:
-    interface: content
-    target: $SNAP_DATA/config/device-gpio
 
 parts:
   helper-go:
