@@ -26,9 +26,6 @@ ARG ALPINE_PKG_EXTRA=""
 # set the working directory
 WORKDIR /device-gpio
 
-# Replicate the APK repository override.
-# If it is no longer necessary to avoid the CDN mirros we should consider dropping this as it is brittle.
-RUN sed -e 's/dl-cdn[.]alpinelinux.org/dl-4.alpinelinux.org/g' -i~ /etc/apk/repositories
 # Install our build time packages.
 RUN apk add --update --no-cache ${ALPINE_PKG_BASE} ${ALPINE_PKG_EXTRA}
 
@@ -44,7 +41,6 @@ FROM alpine:3.16
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
-RUN sed -e 's/dl-cdn[.]alpinelinux.org/dl-4.alpinelinux.org/g' -i~ /etc/apk/repositories
 RUN apk add --update --no-cache zeromq
 
 WORKDIR /

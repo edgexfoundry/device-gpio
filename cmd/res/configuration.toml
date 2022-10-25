@@ -7,6 +7,27 @@ LogLevel = "INFO"
       [Writable.InsecureSecrets.DB.Secrets]
       username = ""
       password = ""
+    [Writable.InsecureSecrets.MQTT]
+    path = "credentials"
+      [Writable.InsecureSecrets.MQTT.Secrets]
+      username = ""
+      password = ""
+  [Writable.Reading]
+  ReadingUnits = true
+  [Writable.Telemetry]
+    Interval = "30s"
+    PublishTopicPrefix  = "edgex/telemetry" # /<service-name>/<metric-name> will be added to this Publish Topic prefix
+      [Writable.Telemetry.Metrics] # All service's metric names must be present in this list.
+      # Device SDK provided Service Metrics
+      EventsSent = false
+      ReadingsSent = false
+      # Common Security Service Metrics
+      SecuritySecretsRequested = false
+      SecuritySecretsStored = false
+      SecurityConsulTokensRequested = false
+      SecurityConsulTokenDuration = false
+      [Writable.Telemetry.Tags] # Contains the service level tags to be attached to all the service's metrics
+  #    Gateway="my-iot-gateway" # Tag must be added here since Env Override can only change existing value, not added new ones.
 
 [Service]
 HealthCheckInterval = "10s"
@@ -15,7 +36,7 @@ ServerBindAddr = ""  # blank value defaults to Service.Host value
 Port = 59910
 StartupMsg = "device gpio started"
 # MaxRequestSize limit the request body size in byte of put command
-MaxRequestSize = 0 # value 0 unlimit the request size.
+MaxRequestSize = 0 # value 0 unlimited request size.
 RequestTimeout = "5s"
 
 [Registry]
@@ -55,6 +76,9 @@ Type = "redis"
 AuthMode = "usernamepassword"  # required for redis messagebus (secure or insecure).
 SecretName = "redisdb"
 PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
+  [MessageQueue.Topics]
+  CommandRequestTopic = "edgex/device/command/request/device-gpio/#"   # subscribing for inbound command requests
+  CommandResponseTopicPrefix = "edgex/device/command/response"   # publishing outbound command responses; <device-service>/<device-name>/<command-name>/<method> will be added to this publish topic prefix
   [MessageQueue.Optional]
   # Default MQTT & NATS Specific options that need to be here to enable environment variable overrides of them
   ClientId = "device-gpio"
@@ -64,7 +88,7 @@ PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name
   AutoReconnect = "true"
   ConnectTimeout = "5" # Seconds
   SkipCertVerify = "false"
-  # Default NATS Specific options that need to be here to enable evnironment variable overrides of them
+  # Default NATS Specific options that need to be here to enable environment variable overrides of them
   Format = "nats"
   RetryOnFailedConnect = "true"
   QueueGroup = ""
@@ -72,10 +96,7 @@ PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name
   AutoProvision = "true"
   Deliver = "new"
   DefaultPubRetryAttempts = "2"
-  Subject = "edgex/#" # Required for NATS Jetstram only for stream autoprovsioning
-  [MessageQueue.Topics]
-  CommandRequestTopic = "edgex/command/request/device-gpio/#"   # subscribing for inbound command requests
-  CommandResponseTopicPrefix = "edgex/command/response"   # publishing outbound command responses; <device-service>/<device-name>/<command-name>/<method> will be added to this publish topic prefix
+  Subject = "edgex/#" # Required for NATS JetStream only for stream auto provisioning
 
 [Driver]
   Interface = "sysfs"
