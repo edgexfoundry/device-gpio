@@ -10,7 +10,25 @@
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
-## [v2.2.0] - Jakarta - 2022-05-11 - (Only compatible with the 2.x releases)
+## [v2.3.0] - Levski - 2022-05-11 - (Only compatible with the 2.x releases)
+
+### Features ✨
+
+- Add Service Metrics configuration ([#9dfec82](https://github.com/edgexfoundry/device-gpio/commits/9dfec82))
+- Add NATS configuration and build option ([#32a3024](https://github.com/edgexfoundry/device-gpio/commits/32a3024))
+- Add commanding via message configuration ([#b17bad2](https://github.com/edgexfoundry/device-gpio/commits/b17bad2))
+- **snap:** add config interface with unique identifier ([#62](https://github.com/edgexfoundry/device-gpio/issues/62)) ([#89403c3](https://github.com/edgexfoundry/device-gpio/commits/89403c3))
+
+### Code Refactoring ♻
+
+- **snap:** edgex-snap-hooks related upgrade ([#49](https://github.com/edgexfoundry/device-gpio/issues/49)) ([#e9c2a01](https://github.com/edgexfoundry/device-gpio/commits/e9c2a01))
+
+### Build 👷
+
+- Upgrade to Go 1.18 and optimize attributiion script ([#e50f883](https://github.com/edgexfoundry/device-gpio/commits/e50f883))
+
+## [v2.2.0] - Kamakura - 2022-05-11 - (Only compatible with the 2.x releases)
+
 ### Documentation 📖
 - **snap:** Move usage instructions to docs ([#27](https://github.com/edgexfoundry/device-gpio/issues/27)) ([#9aa390b](https://github.com/edgexfoundry/device-gpio/commits/9aa390b))
 
