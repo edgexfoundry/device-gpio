@@ -48,7 +48,7 @@ COPY --from=builder /device-gpio/Attribution.txt /
 COPY --from=builder /device-gpio/LICENSE /
 COPY --from=builder /device-gpio/cmd/ /
 
-EXPOSE 59910
+EXPOSE 59994
 
 ENTRYPOINT ["/device-gpio"]
 CMD ["-cp=consul.http://edgex-core-consul:8500", "--registry", "--confdir=/res"]

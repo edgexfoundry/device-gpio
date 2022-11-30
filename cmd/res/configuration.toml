@@ -33,7 +33,7 @@ LogLevel = "INFO"
 HealthCheckInterval = "10s"
 Host = "localhost"
 ServerBindAddr = ""  # blank value defaults to Service.Host value
-Port = 59910
+Port = 59994
 StartupMsg = "device gpio started"
 # MaxRequestSize limit the request body size in byte of put command
 MaxRequestSize = 0 # value 0 unlimited request size.
