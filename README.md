@@ -90,7 +90,7 @@ Since the `edgex-cli` has released, we can use this new approach to operate devi
 
 If you would prefer the traditional RESTful way to operate, you can try:
 
-`curl http://localhost:59882/api/v2/device/name/GPIO-Device01`
+`curl http://localhost:59882/api/v3/device/name/GPIO-Device01`
 
 Use the `curl` response to get the command URLs (with device and command ids) to issue commands to the GPIO device via the command service as shown below. You can also use a tool like `Postman` instead of `curl` to issue the same commands.
 
@@ -106,7 +106,7 @@ Use the `curl` response to get the command URLs (with device and command ids) to
                 "name": "Power",
                 "get": true,
                 "set": true,
-                "path": "/api/v2/device/name/GPIO-Device01/Power",
+                "path": "/api/v3/device/name/GPIO-Device01/Power",
                 "url": "http://edgex-core-command:59882",
                 "parameters": [
                     {
@@ -118,7 +118,7 @@ Use the `curl` response to get the command URLs (with device and command ids) to
             {
                 "name": "LED",
                 "set": true,
-                "path": "/api/v2/device/name/GPIO-Device01/LED",
+                "path": "/api/v3/device/name/GPIO-Device01/LED",
                 "url": "http://edgex-core-command:59882",
                 "parameters": [
                     {
@@ -130,7 +130,7 @@ Use the `curl` response to get the command URLs (with device and command ids) to
             {
                 "name": "Switch",
                 "get": true,
-                "path": "/api/v2/device/name/GPIO-Device01/Switch",
+                "path": "/api/v3/device/name/GPIO-Device01/Switch",
                 "url": "http://edgex-core-command:59882",
                 "parameters": [
                     {
@@ -174,14 +174,14 @@ Assume we have a GPIO device (used for power enable) connected to gpio17 on curr
 
 ```shell
 # Set the 'Power' gpio to high
-$ curl -X PUT -d   '{"Power":"true"}' http://localhost:59882/api/v2/device/name/GPIO-Device01/Power
+$ curl -X PUT -d   '{"Power":"true"}' http://localhost:59882/api/v3/device/name/GPIO-Device01/Power
 {"apiVersion":"v2","statusCode":200}
 $ cat /sys/class/gpio/gpio17/direction ; cat /sys/class/gpio/gpio17/value
 out
 1
 
 # Set the 'Power' gpio to low
-$ curl -X PUT -d   '{"Power":"false"}' http://localhost:59882/api/v2/device/name/GPIO-Device01/Power
+$ curl -X PUT -d   '{"Power":"false"}' http://localhost:59882/api/v3/device/name/GPIO-Device01/Power
 {"apiVersion":"v2","statusCode":200}
 $ cat /sys/class/gpio/gpio17/direction ; cat /sys/class/gpio/gpio17/value
 out
@@ -195,7 +195,7 @@ Now if you test gpio17 of raspberry pi 4b , it is outputting high voltage.
 Assume we have another GPIO device (used for button detection) connected to pin 22 on current system. When we read a value from GPIO, this gpio will be exported and set direction to input.
 
 ```shell
-$ curl http://localhost:59882/api/v2/device/name/GPIO-Device01/Switch
+$ curl http://localhost:59882/api/v3/device/name/GPIO-Device01/Switch
 ```
 
 Here, we post some results:
