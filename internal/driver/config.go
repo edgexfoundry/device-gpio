@@ -11,7 +11,8 @@ package driver
 
 import (
 	"fmt"
-	"github.com/edgexfoundry/device-sdk-go/v2/pkg/service"
+
+	"github.com/edgexfoundry/device-sdk-go/v3/pkg/service"
 )
 
 type configuration struct {
