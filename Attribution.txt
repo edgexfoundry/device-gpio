@@ -171,9 +171,6 @@ https://github.com/warthog618/gpiod/blob/master/LICENSES/MIT.txt
 eclipse/paho.mqtt.golang (Eclipse Public License 2.0) https://github.com/eclipse/paho.mqtt.golang
 https://github.com/eclipse/paho.mqtt.golang/blob/master/LICENSE
 
-pebbe/zmq4 (BSD-2) https://github.com/pebbe/zmq4
-https://github.com/pebbe/zmq4/blob/master/LICENSE.txt
-
 gopkg.in/yaml v2 (Apache 2.0) https://github.com/go-yaml/yaml/tree/v2
 https://github.com/go-yaml/yaml/blob/v2/LICENSE
 
