@@ -36,7 +36,7 @@ apps:
       - bin/source-env-file.sh
     environment:
       CONFIG_PRO_ARG: "--cp=consul.http://localhost:8500"
-      CONF_ARG: "--confdir=$SNAP_DATA/config/device-gpio/res"
+      CONF_ARG: "--configDir=$SNAP_DATA/config/device-gpio/res"
       REGISTRY_ARG: "--registry"
       DEVICE_PROFILESDIR: $SNAP_DATA/config/device-gpio/res/profiles
       DEVICE_DEVICESDIR: $SNAP_DATA/config/device-gpio/res/devices
