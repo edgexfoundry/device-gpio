@@ -55,19 +55,6 @@ Type = "consul"
   Host = "localhost"
   Port = 59881
 
-# Only used when EDGEX_SECURITY_SECRET_STORE=true which is now required for secure Consul
-[SecretStore]
-Type = "vault"
-Host = "localhost"
-Port = 8200
-Path = "device-gpio/"
-Protocol = "http"
-RootCaCertPath = ""
-ServerName = ""
-TokenFile = "/tmp/edgex/secrets/device-gpio/secrets-token.json"
-  [SecretStore.Authentication]
-  AuthType = "X-Vault-Token"
-
 [MessageBus]
 Protocol = "redis"
 Host = "localhost"
@@ -79,6 +66,7 @@ SecretName = "redisdb"
   PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
   CommandRequestTopic = "edgex/device/command/request/device-gpio/#"   # subscribing for inbound command requests
   CommandResponseTopicPrefix = "edgex/device/command/response"   # publishing outbound command responses; <device-service>/<device-name>/<command-name>/<method> will be added to this publish topic prefix
+  SystemEventTopic = "edgex/system-events/core-metadata/device/#/device-gpio/#"
   [MessageBus.Optional]
   # Default MQTT & NATS Specific options that need to be here to enable environment variable overrides of them
   ClientId = "device-gpio"
