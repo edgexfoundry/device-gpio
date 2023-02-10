@@ -23,7 +23,7 @@ tidy:
 	go mod tidy
 
 cmd/device-gpio:
-	CGO_ENABLED=0 go build -tags "$(ADD_BUILD_TAGS)" $(CGOFLAGS) -o $@ ./cmd
+	CGO_ENABLED=0 go build -tags "$(ADD_BUILD_TAGS)" $(GOFLAGS) -o $@ ./cmd
 
 unittest:
 	go test ./... -coverprofile=coverage.out ./...
