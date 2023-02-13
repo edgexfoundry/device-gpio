@@ -60,15 +60,15 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 
 	s.lc.Infof("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes)
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
-		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
+		valid_chip, err := cast.ToUint16E(s.config.Chip_selected)
 		if err != nil {
-			s.lc.Error("invalid chip number, override with gpiochip0, %v", err)
+			s.lc.Errorf("invalid chip number, override with gpiochip0, %v", err)
 			valid_chip = 0
 		}
 		chipName := fmt.Sprintf("gpiochip%d", valid_chip)
 		s.openedChip, err = gpiod.NewChip(chipName)
 		if err != nil {
-			s.lc.Error("failed to open %v, %v", chipName, err)
+			s.lc.Errorf("failed to open %v, %v", chipName, err)
 		}
 	}
 	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
@@ -100,15 +100,15 @@ func (s *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 	params []*dsModels.CommandValue) error {
 	s.lc.Infof("Driver.HandleWriteCommands: protocols: %v, resource: %v, attribute: %v, parameters: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes, params)
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
-		valid_chip, err := cast.ToUint8E(s.config.Chip_selected)
+		valid_chip, err := cast.ToUint16E(s.config.Chip_selected)
 		if err != nil {
-			s.lc.Error("invalid chip number, override with gpiochip0, %v", err)
+			s.lc.Errorf("invalid chip number, override with gpiochip0, %v", err)
 			valid_chip = 0
 		}
 		chipName := fmt.Sprintf("gpiochip%d", valid_chip)
 		s.openedChip, err = gpiod.NewChip(chipName)
 		if err != nil {
-			s.lc.Error("failed to open %v, %v", chipName, err)
+			s.lc.Errorf("failed to open %v, %v", chipName, err)
 		}
 	}
 	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
@@ -144,7 +144,7 @@ func (s *Driver) Stop(force bool) error {
 	case "sysfs":
 		{
 			for line := range s.openedLine {
-				valid_line, err := cast.ToUint8E(line)
+				valid_line, err := cast.ToUint16E(line)
 				if err != nil {
 					s.lc.Debugf(fmt.Sprintf("Driver.Stop: invalid line %v", line))
 					continue
@@ -197,7 +197,7 @@ func (s *Driver) getGPIO(line string, direction string) (bool, error) {
 	switch s.config.Abi_driver {
 	case "sysfs":
 		{
-			valid_line, err := cast.ToUint8E(line)
+			valid_line, err := cast.ToUint16E(line)
 			if err != nil {
 				return false, err
 			}
@@ -241,7 +241,7 @@ func (s *Driver) setGPIO(line string, direction string, value bool) error {
 	switch s.config.Abi_driver {
 	case "sysfs":
 		{
-			valid_line, err := cast.ToUint8E(line)
+			valid_line, err := cast.ToUint16E(line)
 			if err != nil {
 				return err
 			}
