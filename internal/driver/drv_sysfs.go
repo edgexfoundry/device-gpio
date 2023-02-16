@@ -18,7 +18,7 @@ import (
 	"strings"
 )
 
-func (s *Driver) exportBySysfs(line uint8) error {
+func (s *Driver) exportBySysfs(line uint16) error {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		return nil
@@ -26,7 +26,7 @@ func (s *Driver) exportBySysfs(line uint8) error {
 	return ioutil.WriteFile("/sys/class/gpio/export", []byte(fmt.Sprintf("%d\n", line)), 0644) //nolint:gosec
 }
 
-func (s *Driver) unexportBySysfs(line uint8) error {
+func (s *Driver) unexportBySysfs(line uint16) error {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		return ioutil.WriteFile("/sys/class/gpio/unexport", []byte(fmt.Sprintf("%d\n", line)), 0644) //nolint:gosec
@@ -34,7 +34,7 @@ func (s *Driver) unexportBySysfs(line uint8) error {
 	return nil
 }
 
-func (s *Driver) setDirectionBySysfs(line uint8, direction string) error {
+func (s *Driver) setDirectionBySysfs(line uint16, direction string) error {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		var way string
@@ -52,7 +52,7 @@ func (s *Driver) setDirectionBySysfs(line uint8, direction string) error {
 	}
 }
 
-func (s *Driver) setValueBySysfs(line uint8, value bool) error {
+func (s *Driver) setValueBySysfs(line uint16, value bool) error {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		var tmp string
@@ -67,7 +67,7 @@ func (s *Driver) setValueBySysfs(line uint8, value bool) error {
 	}
 }
 
-func (s *Driver) getValueBySysfs(line uint8) (bool, error) {
+func (s *Driver) getValueBySysfs(line uint16) (bool, error) {
 	path := fmt.Sprintf("/sys/class/gpio/gpio%d", line)
 	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		ret, err := ioutil.ReadFile(fmt.Sprintf("/sys/class/gpio/gpio%d/value", line))
