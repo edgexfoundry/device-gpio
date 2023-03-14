@@ -6,7 +6,6 @@
 
 // Package driver this package provides an GPIO implementation of
 // ProtocolDriver interface.
-//
 package driver
 
 import (

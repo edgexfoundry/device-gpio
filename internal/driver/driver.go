@@ -8,7 +8,6 @@
 
 // Package driver this package provides an GPIO implementation of
 // ProtocolDriver interface.
-//
 package driver
 
 import (
@@ -192,7 +191,6 @@ func (s *Driver) RemoveDevice(deviceName string, protocols map[string]models.Pro
 	return nil
 }
 
-//
 func (s *Driver) getGPIO(line string, direction string) (bool, error) {
 	switch s.config.Abi_driver {
 	case "sysfs":
