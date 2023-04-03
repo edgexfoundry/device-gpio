@@ -1,0 +1,10 @@
+# Pre-define Devices
+deviceList:
+  - name: "GPIO-Device01"
+    profileName: "Custom-GPIO-Device"
+    description: "Example of custom gpio device"
+    labels: ["device-custom-gpio"]
+    protocols:
+      other:
+        Address: 'device-custom-gpio-01'
+        Port: '300'

@@ -11,7 +11,7 @@ package driver
 import (
 	"fmt"
 
-	"github.com/edgexfoundry/device-sdk-go/v3/pkg/service"
+	"github.com/edgexfoundry/device-sdk-go/v3/pkg/interfaces"
 )
 
 type configuration struct {
@@ -24,14 +24,14 @@ const (
 	CHIP_SELECTED = "ChipSelected"
 )
 
-func loadInterfaceConfig() (*configuration, error) {
+func loadInterfaceConfig(sdk interfaces.DeviceServiceSDK) (*configuration, error) {
 	config := new(configuration)
-	if val, ok := service.DriverConfigs()[ABI_DRIVER]; ok {
+	if val, ok := sdk.DriverConfigs()[ABI_DRIVER]; ok {
 		config.Abi_driver = val
 	} else {
 		return config, fmt.Errorf("driver config undefined: %s", ABI_DRIVER)
 	}
-	if val, ok := service.DriverConfigs()[CHIP_SELECTED]; ok {
+	if val, ok := sdk.DriverConfigs()[CHIP_SELECTED]; ok {
 		config.Chip_selected = val
 	} else {
 		return config, fmt.Errorf("driver config undefined: %s", CHIP_SELECTED)

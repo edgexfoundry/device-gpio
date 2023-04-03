@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/edgexfoundry/device-sdk-go/v3/pkg/interfaces"
 	dsModels "github.com/edgexfoundry/device-sdk-go/v3/pkg/models"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v3/common"
@@ -34,14 +35,14 @@ type Driver struct {
 
 // Initialize performs protocol-specific initialization for the device
 // service.
-func (s *Driver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsModels.AsyncValues, deviceCh chan<- []dsModels.DiscoveredDevice) error {
-	s.lc = lc
-	s.asyncCh = asyncCh
+func (s *Driver) Initialize(sdk interfaces.DeviceServiceSDK) error {
+	s.lc = sdk.LoggingClient()
+	s.asyncCh = sdk.AsyncValuesChannel()
 
 	s.openedChip = nil
 	s.openedLine = make(map[string](*gpiod.Line))
 
-	config, err := loadInterfaceConfig()
+	config, err := loadInterfaceConfig(sdk)
 	if err != nil {
 		panic(fmt.Errorf("load GPIO configuration failed: %v", err))
 	}

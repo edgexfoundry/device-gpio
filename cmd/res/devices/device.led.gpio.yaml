@@ -1,0 +1,10 @@
+# Example GPIO LED Device
+deviceList:
+  - name: "GPIO-LED01"
+    profileName: "LED-GPIO-Device"
+    description: "Example of LED gpio device"
+    labels: ["led-gpio"]
+    protocols:
+      other:
+        Address: 'device-led-01'
+        Port: '301'

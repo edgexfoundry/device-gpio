@@ -38,7 +38,7 @@ For the snap, refer to the [snap] directory.
 
 ## Usage
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command
-- The gpio device service can contains many pre-defined devices which were defined by [device.custom.gpio.toml](cmd/res/devices/device.custom.gpio.toml) such as `GPIO-Device01`. These devices are created by the GPIO device service in core metadata when the service first initializes
+- The gpio device service can contains many pre-defined devices which were defined by [device.custom.gpio.yaml](cmd/res/devices/device.custom.gpio.yaml) such as `GPIO-Device01`. These devices are created by the GPIO device service in core metadata when the service first initializes
 - Device profiles ([device.custom.gpio.yaml](cmd/res/profiles/device.custom.gpio.yaml)) are used to describe the actual GPIO hardware of a device and allow individual gpios to be given human-readable names/aliases
 - After the gpio device service has started, we can read or write these corresponding pre-defined devices
 
@@ -79,7 +79,7 @@ deviceResources:
       readWrite: "R"
 ```
 
-- Since GPIO sysfs interface is **deprecated after Linux version 4.8**, we provide two ABI interfaces: the sysfs version and the new chardev version. By default we set interface to sysfs, and you can change it inside `[DeviceList.Protocols.interface]` section of `configuration.toml`. For the chardev interface, you still need to specify a selected chip, this is also under `[DeviceList.Protocols.interface]` section.
+- Since GPIO sysfs interface is **deprecated after Linux version 4.8**, we provide two ABI interfaces: the sysfs version and the new chardev version. By default we set interface to sysfs, and you can change it inside `Driver` section of `configuration.yaml`. For the chardev interface, you still need to specify a selected chip, this is also under `Driver` section.
 
 ## Guidance
 Here we give two step by step guidance examples of using this device service. In these examples, we use RESTful API to interact with EdgeX (please notice that, you still need to use Core Command service rather than directly interact with GPIO device service).
