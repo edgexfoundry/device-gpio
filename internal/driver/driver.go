@@ -1,7 +1,7 @@
 // -*- Mode: Go; indent-tabs-mode: t -*-
 //
 // Copyright (C) 2018 Canonical Ltd
-// Copyright (C) 2018-2019, 2022 IOTech Ltd
+// Copyright (C) 2018-2019, 2022-2023 IOTech Ltd
 // Copyright (C) 2021 Jiangxing Intelligence Ltd
 //
 // SPDX-License-Identifier: Apache-2.0
@@ -287,4 +287,13 @@ func (s *Driver) alredayOpen(line string) bool {
 		}
 	}
 	return false
+}
+
+func (s *Driver) Discover() error {
+	return fmt.Errorf("driver's Discover function isn't implemented")
+}
+
+func (s *Driver) ValidateDevice(device models.Device) error {
+	s.lc.Debug("Driver's ValidateDevice function isn't implemented")
+	return nil
 }
