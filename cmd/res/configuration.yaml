@@ -9,7 +9,7 @@ Service:
 # uncomment when running from command-line in hybrid mode with -cp -o flags
 # Clients:
 #   core-metadata:
-#     Host: "localhost" 
+#     Host: "localhost"
 # Registry:
 #   Host: "localhost"
 
@@ -23,3 +23,8 @@ Driver:
   Interface : "sysfs"
   # Interface : "chardev"  # this interface is experimental
   ChipSelected : "0"
+
+Device:
+  # These have common values (currently), but must be here for service local env overrides to apply when customized
+  ProfilesDir: "./res/profiles"
+  DevicesDir: "./res/devices"
