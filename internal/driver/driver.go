@@ -55,6 +55,10 @@ func (s *Driver) Initialize(sdk interfaces.DeviceServiceSDK) error {
 	return nil
 }
 
+func (s *Driver) Start() error {
+	return nil
+}
+
 // HandleReadCommands triggers a protocol Read operation for the specified device.
 func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
 
