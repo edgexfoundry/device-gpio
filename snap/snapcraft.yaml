@@ -8,7 +8,7 @@ adopt-info: device-gpio
 grade: stable
 confinement: strict
 
-# 0: levski
+# 0: kamakura, levski
 # 1: minnesota
 epoch: 1
 
