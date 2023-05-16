@@ -8,7 +8,9 @@ adopt-info: device-gpio
 grade: stable
 confinement: strict
 
-epoch: 0
+# 0: kamakura, levski
+# 1: minnesota
+epoch: 1
 
 architectures:
   - build-on: amd64
