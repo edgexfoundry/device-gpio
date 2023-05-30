@@ -10,6 +10,46 @@
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
+## [v3.0.0] Minnesota - 2023-05-31 (Only compatible with the 3.x releases)
+
+### Features ✨
+- Update for common config ([#119](https://github.com/edgexfoundry/device-gpio/pull/119))
+    ```text
+    BREAKING CHANGE: Configuration file is changed to remove common config settings
+    ```
+- Use latest SDK for MessageBus Request API ([#77](https://github.com/edgexfoundry/device-gpio/pull/77))
+    ```text
+    BREAKING CHANGE: Commands via MessageBus topic configuration are changed
+    ```
+- Remove ZeroMQ MessageBus capability ([#76](https://github.com/edgexfoundry/device-gpio/pull/76))
+    ```text
+    BREAKING CHANGE: ZeroMQ MessageBus capability no longer available
+    ```
+
+### Bug Fixes 🐛
+- Correct the line number overflow issue ([#4751037](https://github.com/edgexfoundry/device-gpio/commits/4751037))
+- Correct GOFLAGS ([#d032a2a](https://github.com/edgexfoundry/device-gpio/commits/d032a2a))
+- **snap:** Refactor to avoid conflicts with readonly config provider directory ([#137](https://github.com/edgexfoundry/device-gpio/issues/137)) ([#21c70a6](https://github.com/edgexfoundry/device-gpio/commits/21c70a6))
+
+### Code Refactoring ♻
+- Change configuration and devices files format to YAML ([#146](https://github.com/edgexfoundry/device-gpio/pull/146))
+    ```text
+    BREAKING CHANGE: Configuration files are now in YAML format, Default file name is now configuration.yaml
+    ```
+- **snap:** Update command and metadata sourcing ([#131](https://github.com/edgexfoundry/device-gpio/issues/131)) ([#6427482](https://github.com/edgexfoundry/device-gpio/commits/6427482))
+- **snap:** Drop the support for legacy snap env options ([#79](https://github.com/edgexfoundry/device-gpio/issues/79))
+    ```text
+    BREAKING CHANGE:
+    - Drop the support for legacy snap options with env. prefix
+    - Upgrade edgex-snap-hooks to v3
+    - Upgrade edgex-snap-testing Github action to v3
+    - Add snap's Go module to dependabot
+    - Other minor refactoring
+    ```
+
+### Build 👷
+- Update to Go 1.20, Alpine 3.17 and linter v1.51.2 ([#c426106](https://github.com/edgexfoundry/device-gpio/commits/c426106))
+
 ## [v2.3.0] - Levski - 2022-05-11 - (Only compatible with the 2.x releases)
 
 ### Features ✨
