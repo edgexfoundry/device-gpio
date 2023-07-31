@@ -6,7 +6,7 @@ require (
 	github.com/edgexfoundry/device-sdk-go/v3 v3.0.0
 	github.com/edgexfoundry/go-mod-core-contracts/v3 v3.0.0
 	github.com/spf13/cast v1.5.1
-	github.com/warthog618/gpiod v0.8.1
+	github.com/warthog618/gpiod v0.8.2
 )
 
 require (
@@ -61,7 +61,7 @@ require (
 	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
 	google.golang.org/genproto v0.0.0-20230223222841-637eb2293923 // indirect
