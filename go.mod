@@ -3,7 +3,7 @@ module github.com/edgexfoundry/device-gpio
 go 1.20
 
 require (
-	github.com/edgexfoundry/device-sdk-go/v3 v3.1.0-dev.17
+	github.com/edgexfoundry/device-sdk-go/v3 v3.1.0-dev.18
 	github.com/edgexfoundry/go-mod-core-contracts/v3 v3.1.0-dev.8
 	github.com/spf13/cast v1.5.1
 	github.com/warthog618/gpiod v0.8.2
