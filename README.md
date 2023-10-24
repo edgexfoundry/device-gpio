@@ -18,7 +18,7 @@ GPIO Micro Service - device service for connecting GPIO devices to EdgeX
 
 ## Build with NATS Messaging
 Currently, the NATS Messaging capability (NATS MessageBus) is opt-in at build time.
-This means that the published Docker image and Snaps do not include the NATS messaging capability.
+This means that the published Docker image does not include the NATS messaging capability.
 
 The following make commands will build the local binary or local Docker image with NATS messaging
 capability included.
@@ -32,15 +32,12 @@ See [Compose Builder](https://github.com/edgexfoundry/edgex-compose/tree/main/co
 
 ## Packaging
 
-This component is packaged as docker image and snap.
+This component is packaged as docker image.
 
 For docker, please refer to the [Dockerfile] and [Docker Compose Builder] scripts.
 
-For the snap, refer to the [snap] directory.
-
 [Dockerfile]: Dockerfile
 [Docker Compose Builder]: https://github.com/edgexfoundry/edgex-compose/tree/main/compose-builder
-[snap]: snap
 
 ## Usage
 - This Device Service runs with other EdgeX Core Services, such as Core Metadata, Core Data, and Core Command
