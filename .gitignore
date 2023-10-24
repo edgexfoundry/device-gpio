@@ -17,15 +17,5 @@
 vendor/
 cmd/device-gpio
 
-# snap files
-*.snap
-*.assert
-prime/
-stage/
-parts/
-squashfs-root/
-coverage.out
-VERSION
-
 # mac preview
 .DS_Store
