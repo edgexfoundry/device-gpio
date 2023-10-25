@@ -16,6 +16,8 @@
 .idea/
 vendor/
 cmd/device-gpio
+coverage.out
+VERSION
 
 # mac preview
 .DS_Store
