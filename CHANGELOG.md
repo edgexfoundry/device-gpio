@@ -10,6 +10,35 @@
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
+## [v3.1.0] Napa - 2023-11-15 (Only compatible with the 3.x releases)
+
+
+### ✨  Features
+
+- Remove snap packaging ([b788760…](https://github.com/edgexfoundry/device-gpio/commit/b788760bca51a6609041fe9742452de0d3885267))
+```text
+
+BREAKING CHANGE: Remove snap packaging
+
+```
+
+
+### ♻ Code Refactoring
+
+- Remove obsolete comments from config file ([66d5cf4…](https://github.com/edgexfoundry/device-gpio/commit/66d5cf403a0fc925295db436bd209bf520086963))
+- Remove github.com/pkg/errors from Attribution.txt ([d501906…](https://github.com/edgexfoundry/device-gpio/commit/d50190667d9917666c10920bc3d6643c5e388fd4))
+
+
+### 👷 Build
+
+- Upgrade to go-1.21, Linter1.54.2 and Alpine 3.18 ([ef55be4…](https://github.com/edgexfoundry/device-gpio/commit/ef55be45597b08925ee748c561de195acdfd850a))
+
+
+### 🤖 Continuous Integration
+
+- Add automated release workflow on tag creation ([22c81a8…](https://github.com/edgexfoundry/device-gpio/commit/22c81a833baec478a9c4b4462af826b36bf753df))
+
+
 ## [v3.0.0] Minnesota - 2023-05-31 (Only compatible with the 3.x releases)
 
 ### Features ✨
