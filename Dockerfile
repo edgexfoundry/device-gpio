@@ -41,7 +41,9 @@ FROM alpine:3.18
 LABEL license='SPDX-License-Identifier: Apache-2.0' \
   copyright='Copyright (c) 2021: Jiangxing Intelligence'
 
-RUN apk add --update --no-cache
+RUN apk add --update --no-cache dumb-init
+# Ensure using latest versions of all installed packages to avoid any recent CVEs
+RUN apk --no-cache upgrade
 
 WORKDIR /
 COPY --from=builder /device-gpio/Attribution.txt /
