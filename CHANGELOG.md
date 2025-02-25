@@ -10,6 +10,25 @@
 - [go-mod-secrets](https://github.com/edgexfoundry/go-mod-secrets/blob/main/CHANGELOG.md) (indirect dependency)
 - [go-mod-configuration](https://github.com/edgexfoundry/go-mod-configuration/blob/main/CHANGELOG.md) (indirect dependency)
 
+## [4.0.0] Odessa - 2025-03-12 (Only compatible with the 4.x releases)
+
+### ♻ Code Refactoring
+
+- Update module to v4 ([9f02b45…](https://github.com/edgexfoundry/device-gpio/commit/9f02b45e77d0e53a10c3bbe3e35621a61112d3b4))
+```text
+
+BREAKING CHANGE: update go module to v4
+
+```
+
+### 🐛 Bug Fixes
+
+- Remove unused protocol properties from device definitions ([5e22e7d…](https://github.com/edgexfoundry/device-gpio/commit/5e22e7d54486bfe2bcf201989b327072b3ba8f87))
+
+### 👷 Build
+
+- Upgrade to go-1.23, Linter1.61.0 and Alpine 3.20 ([6b5a75e…](https://github.com/edgexfoundry/device-gpio/commit/6b5a75e1356565ab4be406e01d3911e6398d22a8))
+
 ## [v3.1.0] Napa - 2023-11-15 (Only compatible with the 3.x releases)
 
 
