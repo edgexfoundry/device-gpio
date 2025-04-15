@@ -62,7 +62,7 @@ func (s *Driver) Start() error {
 // HandleReadCommands triggers a protocol Read operation for the specified device.
 func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {
 
-	s.lc.Infof("protocols: %v resource: %v attributes: %v", protocols, reqs[0].DeviceResourceName, reqs[0].Attributes)
+	s.lc.Infof("protocols: %v reqs: %+v", protocols, reqs)
 	if s.openedChip == nil && s.config.Abi_driver == "chardev" {
 		valid_chip, err := cast.ToUint16E(s.config.Chip_selected)
 		if err != nil {
@@ -75,17 +75,17 @@ func (s *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 			s.lc.Errorf("failed to open %v, %v", chipName, err)
 		}
 	}
-	lineNumStr := fmt.Sprintf("%v", reqs[0].Attributes["line"])
-
-	defaultDirection, ok := reqs[0].Attributes["defaultDirection"].(string)
-	if !ok {
-		defaultDirection = "out"
-		s.lc.Debug("No default direction provided - using default out direction")
-	}
 
 	// now := time.Now().UnixNano()
 
 	for _, req := range reqs {
+		lineNumStr := fmt.Sprintf("%v", req.Attributes["line"])
+
+		defaultDirection, ok := req.Attributes["defaultDirection"].(string)
+		if !ok {
+			defaultDirection = "out"
+			s.lc.Debug("No default direction provided - using default out direction")
+		}
 		value, err := s.getGPIO(lineNumStr, defaultDirection)
 		if err != nil {
 			return nil, err
