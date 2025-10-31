@@ -15,5 +15,6 @@
 //
 
 edgeXBuildGoApp (
-    project: 'device-gpio'
+    project: 'device-gpio',
+    goVersion: '1.23'
 )
