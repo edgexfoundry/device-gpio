@@ -72,7 +72,7 @@ func (s *Driver) getValueBySysfs(line uint16) (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		value, err := strconv.Atoi(strings.Replace(string(ret), "\n", "", -1))
+		value, err := strconv.Atoi(strings.ReplaceAll(string(ret), "\n", ""))
 		if err != nil {
 			return false, err
 		}

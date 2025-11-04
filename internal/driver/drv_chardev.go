@@ -9,7 +9,7 @@
 package driver
 
 import (
-	"github.com/warthog618/gpiod"
+	gpiod "github.com/warthog618/go-gpiocdev"
 )
 
 func (s *Driver) getValueByChardev(line *gpiod.Line) (bool, error) {
@@ -17,10 +17,7 @@ func (s *Driver) getValueByChardev(line *gpiod.Line) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	ctx := true
-	if val == 0 {
-		ctx = false
-	}
+	ctx := val != 0
 	return ctx, nil
 }
 
