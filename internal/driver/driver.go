@@ -22,7 +22,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v4/models"
 
 	"github.com/spf13/cast"
-	"github.com/warthog618/gpiod"
+	gpiod "github.com/warthog618/go-gpiocdev"
 )
 
 type Driver struct {
